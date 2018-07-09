@@ -10,7 +10,7 @@
 using namespace std;
 
 namespace utils {
-    string file_to_string(ifstream &file);
+    void file_to_string(ifstream &file, string info, string sequence);
     uint pow_mod(long a, long b, long mod);
     bool isTextFile(const string& fileName);
 }

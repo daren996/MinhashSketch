@@ -2,11 +2,12 @@
 
 namespace utils {
 
-    string file_to_string(ifstream &file) {
-        string str;
-        str.assign((std::istreambuf_iterator<char>(file)),
-                   (std::istreambuf_iterator<char>()));
-        return str;
+    void file_to_string(ifstream &file, string file_info, string sequence) {
+        string s;
+        getline(file, file_info);
+        while (getline(file, s))
+            if (!s.empty())
+                sequence += s;
     }
 
     uint pow_mod(long a, long b, long mod) {

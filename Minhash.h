@@ -1,5 +1,5 @@
 //
-// Created by Darren on 2018/7/7.
+// Created by Darren on 2018/7/6.
 //
 
 #ifndef MINHASHSKETCH_MINHASH_H

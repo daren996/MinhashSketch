@@ -17,12 +17,13 @@ void help();
 
 void usage();
 
+// MinhashSketch.exe ../testing_files/sequence_clip1.fasta ../testing_files/sequence_clip2.fasta all -e --k=5 --m=10 --t=10
 int main(int argc, char *argv[]) {
 
     if (argc == 2 && string(argv[1]) == "help") help();
     if (argc < 4) usage();
 
-    // Default values
+    // DEFAULT VALUES
     int k, m, t, seed;
     bool e;
     k = 9;
@@ -81,14 +82,8 @@ int main(int argc, char *argv[]) {
 
     // GET TWO SEQUENCES
     string file_info1, file_info2, sequence1, sequence2, s1, s2;
-    getline(file1, file_info1);
-    getline(file2, file_info2);
-    while (getline(file1, s1))
-        if (!s1.empty())
-            sequence1 += s1;
-    while (getline(file2, s2))
-        if (!s2.empty())
-            sequence2 += s2;
+    utils::file_to_string(file1, file_info1, sequence1);
+    utils::file_to_string(file2, file_info2, sequence2);
     if (sequence1.size() < k || sequence2.size() < k) {
         cout << "k cannot be greater than the size of any document" << endl;
         exit(1);
@@ -111,8 +106,8 @@ int main(int argc, char *argv[]) {
         vector<Hash> hashes = generateHashes(t, seed);
         vector<vector<int>> sig1 = generateSignature(k, m, sequence1, hashes);
         vector<vector<int>> sig2 = generateSignature(k, m, sequence2, hashes);
-//        output_signature(sig1);
-//        output_signature(sig2);
+        output_signature(sig1);
+        output_signature(sig2);
         similarity = computeSim(sig1, sig2);
         time = double(clock() - ini_time) / CLOCKS_PER_SEC;
         results.emplace_back("minhash", similarity, time);
@@ -155,23 +150,15 @@ void output_signature(vector<vector<int>> sig1) {
 void usage() {
     cout << "===========================" << endl;
     cerr << "Usage: " << endl << endl;
-    cerr << "    ./SimCalculator FILE_ONE FILE_TWO MODE" << endl;
+    cerr << "    ./MinhashSketch FILE_ONE FILE_TWO MODE" << endl;
     cerr << endl;
     cerr << "    Possible MODEs are:" << endl;
     cerr << endl << bold_on;
     cerr << "        all" << endl;
     cerr << endl;
-    cerr << "        jaccard" << endl;
-    cerr << endl;
-    cerr << "        jaccard_hash" << endl;
-    cerr << endl;
-    cerr << "        jaccard_roll" << endl;
-    cerr << endl;
     cerr << "        minhash" << endl;
     cerr << endl;
-    cerr << "        minhash_roll" << endl << bold_off;
-    cout << endl;
-    cerr << "Execute \"./SimCalculator help\" for an extended help section." << endl;
+    cerr << "Execute \"MinhashSketch help\" for an extended help section." << endl;
     cout << "===========================" << endl;
     exit(1);
 }
@@ -179,55 +166,25 @@ void usage() {
 void help() {
     cout << endl;
     cout << bold_on << "NAME" << bold_off << endl;
-    cout << "    " << "SimCalculator" << endl;
+    cout << "    " << "MinhashSketch" << endl;
     cout << endl;
     cout << bold_on << "USAGE" << bold_off << endl;
-    cout << "    " << "SimCalculator FILE_ONE FILE_TWO " << bold_on << "MODE [PARAMETERS...]" << bold_off << endl;
+    cout << "    " << "MinhashSketch FILE_ONE FILE_TWO " << bold_on << "MODE [PARAMETERS...]" << bold_off << endl;
     cout << endl;
-    cout << "    " << "SimCalculator calculates the similarity between two text files FILE_ONE and FILE_TWO" << endl;
+    cout << "    " << "MinhashSketch calculates the similarity between two text files FILE_ONE and FILE_TWO" << endl;
     cout << "    " << "and outputs it as a number between 0 and 1, where 1 means the two files are exactly" << endl;
     cout << "    " << "the same." << endl;
     cout << endl;
     cout << bold_on << "MODE" << bold_off << endl;
-    cout << "    " << "There are five different modes which change the way SimCalculator computes the simi-" << endl;
-    cout << "    " << "larity. Each may make use of different parameters, indicated as follows:" << endl;;
+    cout << "    " << "There are modes which change the way MinhashSketch computes the similarity. " << endl;
+    cout << "    " << "Each may make use of different parameters, indicated as follows:" << endl;;
     cout << endl;
     cout << "    " << bold_on << "all" << bold_off << endl;
     cout << "        " << "This option executes all modes." << endl;
     cout << endl;
-    cout << "    " << bold_on << "jaccard" << bold_off << endl;
-    cout << "        " << "Performs the calculation by storing k-shingles as strings in a set for each file." << endl;
-    cout << "        " << "Used parameters are: " << endl;
-    cout << endl;
-    cout << "            " << "--k=POSITIVE_INTEGER as shingle size" << endl;
-    cout << endl;
-    cout << "    " << bold_on << "jaccard_hash" << bold_off << endl;
-    cout << "        " << "Performs the calculation by storing k-shingles as 4-byte hashes in a set for each" << endl;
-    cout << "        " << "file. Uses less memory than jaccard, at the expense of a possible loss in" << endl;
-    cout << "        " << "precision for large values of k. Used parameters are:" << endl;
-    cout << endl;
-    cout << "            " << "--k=POSITIVE_INTEGER as shingle size" << endl;
-    cout << endl;
-    cout << "    " << bold_on << "jaccard_roll" << bold_off << endl;
-    cout << "        " << "Same as jaccard_hash, but hashes k-shingles by using a rolling hash. Better time" << endl;
-    cout << "        " << "performance than jaccard_hash for greater values of k. Used parameters are:" << endl;
-    cout << endl;
-    cout << "            " << "--k=POSITIVE_INTEGER as shingle size" << endl;
-    cout << endl;
     cout << "    " << bold_on << "minhash" << bold_off << endl;
-    cout << "        " << "Calculates the similarity by computing minhash signatures for each document. Used" << endl;
+    cout << "        " << "Calculates the similarity by computing minhash signatures for each sequence. Used" << endl;
     cout << "        " << "parameters are." << endl;
-    cout << endl;
-    cout << "            " << "--k=POSITIVE_INTEGER as shingle size" << endl;
-    cout << endl;
-    cout << "            " << "--t=POSITIVE_INTEGER" << bold_on << " (obligatory) " << bold_off
-         << "as number of hash functions used" << endl;
-    cout << endl;
-    cout << "            " << "--seed=INTEGER as random generator seed" << endl;
-    cout << endl;
-    cout << "    " << bold_on << "minhash_roll" << bold_off << endl;
-    cout << "        " << "Same as minhash mode, but uses a rolling hash. Better time performace tha minhash" << endl;
-    cout << "        " << "for greater values of k. Used parameters are:" << endl;
     cout << endl;
     cout << "            " << "--k=POSITIVE_INTEGER as shingle size" << endl;
     cout << endl;
@@ -242,8 +199,11 @@ void help() {
     cout << "        " << "Defaults to k=9. Indicates the size of the shingles used to calculate the simi-" << endl;
     cout << "        " << "larity between the documents." << endl;
     cout << endl;
+    cout << "    " << bold_on << "--m=POSITIVE_INTEGER" << bold_off << endl;
+    cout << "        " << "Defaults to m=1. Indicates the number of sketches saved in minhash modes." << endl;
+    cout << endl;
     cout << "    " << bold_on << "--t=POSITIVE_INTEGER" << bold_off << endl;
-    cout << "        " << "Indicates the number of hash functions used in minhash modes." << endl;
+    cout << "        " << "Defaults to t=1. Indicates the number of hash functions used in minhash modes." << endl;
     cout << endl;
     cout << "    " << bold_on << "--seed=INTEGER" << bold_off << endl;
     cout << "        " << "Defaults to a random value. Used by minhash modes in their random generator number." << endl;
