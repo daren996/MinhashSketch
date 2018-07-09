@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/cygdrive/c/Users/Darren/Desktop/MinhashSketch/Minhash.cpp
+/cygdrive/c/Users/user/Documents/GitRepos/MinhashSketch/Minhash.cpp
 Minhash.h
-/cygdrive/c/Users/Darren/Desktop/MinhashSketch/Minhash.h
+/cygdrive/c/Users/user/Documents/GitRepos/MinhashSketch/Minhash.h
 
-/cygdrive/c/Users/Darren/Desktop/MinhashSketch/Minhash.h
+/cygdrive/c/Users/user/Documents/GitRepos/MinhashSketch/Minhash.h
 string
 -
 vector
@@ -26,19 +26,19 @@ climits
 unordered_set
 -
 Utils.h
-/cygdrive/c/Users/Darren/Desktop/MinhashSketch/Utils.h
+/cygdrive/c/Users/user/Documents/GitRepos/MinhashSketch/Utils.h
 
-/cygdrive/c/Users/Darren/Desktop/MinhashSketch/Utils.cpp
+/cygdrive/c/Users/user/Documents/GitRepos/MinhashSketch/Utils.cpp
 Utils.h
-/cygdrive/c/Users/Darren/Desktop/MinhashSketch/Utils.h
+/cygdrive/c/Users/user/Documents/GitRepos/MinhashSketch/Utils.h
 
-/cygdrive/c/Users/Darren/Desktop/MinhashSketch/Utils.h
+/cygdrive/c/Users/user/Documents/GitRepos/MinhashSketch/Utils.h
 fstream
 -
 iostream
 -
 
-/cygdrive/c/Users/Darren/Desktop/MinhashSketch/main.cpp
+/cygdrive/c/Users/user/Documents/GitRepos/MinhashSketch/main.cpp
 algorithm
 -
 fstream
@@ -56,5 +56,5 @@ vector
 string
 -
 Minhash.h
-/cygdrive/c/Users/Darren/Desktop/MinhashSketch/Minhash.h
+/cygdrive/c/Users/user/Documents/GitRepos/MinhashSketch/Minhash.h
 

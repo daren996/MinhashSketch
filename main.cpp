@@ -139,7 +139,7 @@ int main(int argc, char *argv[]) {
 
 void output_signature(vector<vector<int>> sig1) {
     for (int h = 0; h < sig1.size(); ++h) {
-        cout << "sig1[" << h << "].size(): " << sig1[h].size() << "\t";
+        cout << "sig[" << h << "].size(): " << sig1[h].size() << "\t";
         for (int i = 0; i < sig1[h].size(); ++i) {
             cout << sig1[h][i] << " ";
         }

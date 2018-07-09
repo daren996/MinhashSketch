@@ -3,4 +3,11 @@ project(MinhashSketch)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(MinhashSketch main.cpp Utils.cpp Minhash.cpp Utils.h Minhash.h)
+include_directories(.)
+
+add_executable(MinhashSketch
+        main.cpp
+        Minhash.cpp
+        Minhash.h
+        Utils.cpp
+        Utils.h)

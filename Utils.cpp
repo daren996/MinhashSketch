@@ -2,7 +2,7 @@
 
 namespace utils {
 
-    void file_to_string(ifstream &file, string file_info, string sequence) {
+    void file_to_string(ifstream &file, string &file_info, string &sequence) {
         string s;
         getline(file, file_info);
         while (getline(file, s))
