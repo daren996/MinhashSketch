@@ -106,8 +106,11 @@ int main(int argc, char *argv[]) {
         vector<Hash> hashes = generateHashes(t, seed);
         vector<vector<int>> sig1 = generateSignature(k, m, sequence1, hashes);
         vector<vector<int>> sig2 = generateSignature(k, m, sequence2, hashes);
+        cout << "sig1" << endl;
         output_signature(sig1);
+        cout << "\nsig2" << endl;
         output_signature(sig2);
+        cout << endl;
         similarity = computeSim(sig1, sig2);
         time = double(clock() - ini_time) / CLOCKS_PER_SEC;
         results.emplace_back("minhash", similarity, time);
