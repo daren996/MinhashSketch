@@ -26,6 +26,10 @@ Since m(number of smallist values you want) is much smaller than the sequence le
 
 So if we insert and pop the new value into the heap every time, the complexity will be O[log(m)*(l-k+1)]. But if we save the maximum of this heap, the complexity tends to be O(l-k+1).
 
+### Change to a more reasonable hash function system
+
+
+
 -------------------
 This is a project when I was internship at the University of Washington in St. Louis under the guidance of [Prof. Buhler](https://www.cse.wustl.edu/~jbuhler/).
 
