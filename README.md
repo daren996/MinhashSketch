@@ -1,9 +1,9 @@
 # MinhashSketch
 
 ## Some improvements when implementing the algorithm
-When meeting with Prof. Buhler, I got several tips about the code.
+When meeting with Prof. Buhler, I got several tips about the implemention.
 
-### Simplify the process of taking k-mers
+### Simplify the process of taking k-mers subsequence
 
 I used hash template struct of STL to transfer sequence of DNA to integer before. 
 This will cost O[k*(l-k+1)] complexity to get each base and O(l-k+1) to caculate hash values totally which is terrible inefficient. 
