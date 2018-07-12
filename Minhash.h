@@ -17,11 +17,10 @@
 using namespace std;
 
 typedef unsigned int h_type;
-typedef vector<vector<int>> signature;
+typedef vector<vector<unsigned long>> signature;
 
 class Hash {
 private:
-    h_type m;
     long a;
     long b;
     long p;
@@ -30,7 +29,6 @@ private:
 public:
     Hash() = default;
     Hash(h_type m, h_type u, int seed) {
-        this->m = m;
         p = generateNextPrime(u);
         mt19937 rng(seed);
         uniform_int_distribution<h_type> distA(1, static_cast<h_type>(p - 1));
@@ -38,10 +36,11 @@ public:
         a = distA(rng);
         b = distB(rng);
     }
-    h_type operator()(h_type k) const;
+    unsigned long operator()(unsigned long k) const;
 };
 vector<Hash> generateHashes(int t, int seed);
-void insertValue(int value, signature &s, unordered_set<int> &filter, const vector<Hash> &hashes);
+void insertValue(unsigned long value, signature &s, unordered_set<unsigned long> &filter,
+                 const vector<Hash> &hashes, vector<unsigned long> heap_max_v);
 signature generateSignature(int k, int m, const string &file, const vector<Hash> &hashes);
 int computeSim(vector<int> v1, vector<int> v2);
 double computeSim(const signature &sig1, const signature &sig2);

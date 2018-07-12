@@ -20,6 +20,12 @@ You will get the first k-mer subsequence, ATTGC, then transfer to 0011111001 in 
 
 As a result, you only need O(l-k+1) take-operations and no hash operations to transfer sequence to integer.
 
+### Save maximum value in heap
+
+Since m(number of smallist values you want) is much smaller than the sequence length, the hash value we get is greater than the maximum value in the heap in most cases. 
+
+So if we insert and pop the new value into the heap every time, the complexity will be O[log(m)*(l-k+1)]. But if we save the maximum of this heap, the complexity tends to be O(l-k+1).
+
 -------------------
 This is a project when I was internship at the University of Washington in St. Louis under the guidance of [Prof. Buhler](https://www.cse.wustl.edu/~jbuhler/).
 

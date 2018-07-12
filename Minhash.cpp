@@ -31,8 +31,8 @@ long Hash::generateNextPrime(long n) {
     return n;
 }
 
-h_type Hash::operator()(h_type k) const {
-    return (h_type) (((a * k + b) % p) % m);
+unsigned long Hash::operator()(unsigned long x) const {
+    return (a * x + b) % p;
 }
 
 
@@ -46,32 +46,37 @@ vector<Hash> generateHashes(int t, int seed) {
     return hashes;
 }
 
-void insertValue(int value, signature &sig, unordered_set<int> &filter, const vector<Hash> &hashes) {
+void insertValue(unsigned long value, signature &sig, unordered_set<unsigned long> &filter,
+                 const vector<Hash> &hashes, vector<unsigned long> heap_max_v) {
     if (filter.insert(value).second) {
         for (int h = 0; h < hashes.size(); ++h) {
-            int p = hashes[h](static_cast<h_type>(value));
-            sig[h].push_back(p);
-            push_heap(sig[h].begin(), sig[h].end(), cmp);
-            pop_heap(sig[h].begin(), sig[h].end(), cmp);
-            sig[h].pop_back();
+            unsigned long p = hashes[h](value);
+            if (p < heap_max_v[h]) {
+                sig[h].push_back(p);
+                push_heap(sig[h].begin(), sig[h].end(), cmp);
+                pop_heap(sig[h].begin(), sig[h].end(), cmp);
+                sig[h].pop_back();
+            }
         }
     }
 }
 
 signature generateSignature(int k, int m, const string &sequence, const vector<Hash> &hashes) {
-    signature sig(hashes.size(), vector<int>(m, INT_MAX));
-    long s_index = 0; // pointer of current base
+    unsigned long s_index = 0; // pointer of current base
+    unsigned long cur_seq = 0; // current sub-sequence
+    unordered_set<unsigned long> filter;
+    signature sig(hashes.size(), vector<unsigned long>(m, ULONG_MAX ));
+    vector<unsigned long> heap_max_v(m, ULONG_MAX );
     for (int h = 0; h < hashes.size(); ++h) {
         make_heap(sig[h].begin(), sig[h].end(), cmp);
     }
-    unordered_set<int> filter;
-    hash<string> hashFunction; // transfer string to int by STL hash
-    string shingle(static_cast<unsigned long>(k), ' ');
-    for (int i = 0; i <= sequence.size() - k; ++i) {
-        for (int j = 0; j < k; ++j) {
-            shingle[j] = sequence[i + j];
-        }
-        insertValue(static_cast<int>(hashFunction(shingle)), sig, filter, hashes);
+    for (; s_index < k; ++s_index) {
+        cur_seq = (cur_seq << 2) % (unsigned long)pow(4, k) + utils::base2int(sequence[s_index]);
+    }
+    insertValue(cur_seq, sig, filter, hashes, heap_max_v);
+    for (; s_index < sequence.size(); ++s_index) {
+        cur_seq = (cur_seq << 2) % (unsigned long)pow(4, k) + utils::base2int(sequence[s_index]);
+        insertValue(cur_seq, sig, filter, hashes, heap_max_v);
     }
     for (int h = 0; h < sig.size(); ++h) {
         sort_heap(sig[h].begin(), sig[h].end(), cmp);
