@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
 
     // GET TWO SEQUENCES
     string file_info1, file_info2, sequence1, sequence2, s1, s2;
-    utils::file_to_string(file1, file_info1, sequence1);
+    utils::file_to_string(file1, file_info1, sequence1); // The first line is file information
     utils::file_to_string(file2, file_info2, sequence2);
     if (sequence1.size() < k || sequence2.size() < k) {
         cout << "k cannot be greater than the size of any document" << endl;
@@ -91,6 +91,7 @@ int main(int argc, char *argv[]) {
     file1.close();
     file2.close();
 
+    // MAIN PROGRESS
     clock_t ini_time;
     bool mode_found = false;
     double similarity, time;
@@ -117,6 +118,7 @@ int main(int argc, char *argv[]) {
     }
     if (!mode_found) usage();
 
+    // OUTPUT RESULTS
     if (e) {
         cout << setw(12) << "cal_name" << setw(14) << "seed" << setw(5) << "k" << setw(5) << "m" << setw(7) << "t";
         cout << setw(13) << fixed << "time" << setw(13) << fixed << "similarity" << endl;

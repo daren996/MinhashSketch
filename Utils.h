@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <map>
 
 //typedef unsigned int uint;
 //typedef unsigned long ulong;
@@ -10,6 +11,7 @@
 using namespace std;
 
 namespace utils {
+    int base2int(char base);
     void file_to_string(ifstream &file, string &info, string &sequence);
     uint pow_mod(long a, long b, long mod);
     bool isTextFile(const string& fileName);

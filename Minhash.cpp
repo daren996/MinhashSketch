@@ -60,6 +60,7 @@ void insertValue(int value, signature &sig, unordered_set<int> &filter, const ve
 
 signature generateSignature(int k, int m, const string &sequence, const vector<Hash> &hashes) {
     signature sig(hashes.size(), vector<int>(m, INT_MAX));
+    long s_index = 0; // pointer of current base
     for (int h = 0; h < hashes.size(); ++h) {
         make_heap(sig[h].begin(), sig[h].end(), cmp);
     }

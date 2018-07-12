@@ -2,6 +2,21 @@
 
 namespace utils {
 
+    int base2int(char base) {
+        switch (base) {
+            case 'A':
+                return 0;
+            case 'C':
+                return 1;
+            case 'G':
+                return 2;
+            case 'T':
+                return 3;
+            default:
+                return -1;
+        }
+    }
+
     void file_to_string(ifstream &file, string &file_info, string &sequence) {
         string s;
         getline(file, file_info);
@@ -17,37 +32,37 @@ namespace utils {
         if (b == 1) {
             return a % mod;
         }
-        long powa = pow_mod(a, b/2, mod);
-        powa = powa*powa;
+        long powa = pow_mod(a, b / 2, mod);
+        powa = powa * powa;
         if (b & 1) {
-            powa = powa*a;
+            powa = powa * a;
         }
         return powa % mod;
     }
 
-    bool isTextFile(const string& fileName) {
+    bool isTextFile(const string &fileName) {
         int l = fileName.size();
-        if(l >= 5) {
-            return fileName.substr(l-4, l) == ".txt";
+        if (l >= 5) {
+            return fileName.substr(l - 4, l) == ".txt";
         } else {
             return false;
         }
     }
 }
 
-std::ostream& bold_on(std::ostream& os) {
+std::ostream &bold_on(std::ostream &os) {
     return os << "\e[1m";
 }
 
-std::ostream& bold_off(std::ostream& os) {
+std::ostream &bold_off(std::ostream &os) {
     return os << "\e[0m";
 }
 
-std::ostream& uline_on(std::ostream& os) {
+std::ostream &uline_on(std::ostream &os) {
     return os << "\e[4m";
 }
 
-std::ostream& uline_off(std::ostream& os) {
+std::ostream &uline_off(std::ostream &os) {
     return os << "\e[0m";
 }
 

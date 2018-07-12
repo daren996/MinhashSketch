@@ -1,6 +1,6 @@
-C:\Users\user\.CLion2018.1\system\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /cygdrive/c/Users/user/Documents/GitRepos/MinhashSketch
--- The C compiler identification is GNU 7.3.0
--- The CXX compiler identification is GNU 7.3.0
+C:\Users\Darren\.CLion2018.1\system\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /cygdrive/c/Git/MinhashSketch
+-- The C compiler identification is GNU 6.4.0
+-- The CXX compiler identification is GNU 6.4.0
 -- Check for working C compiler: /usr/bin/cc
 -- Check for working C compiler: /usr/bin/cc -- works
 -- Detecting C compiler ABI info
@@ -15,4 +15,4 @@ C:\Users\user\.CLion2018.1\system\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=
 -- Detecting CXX compile features - done
 -- Configuring done
 -- Generating done
--- Build files have been written to: /cygdrive/c/Users/user/Documents/GitRepos/MinhashSketch/cmake-build-debug
+-- Build files have been written to: /cygdrive/c/Git/MinhashSketch/cmake-build-debug

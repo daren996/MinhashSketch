@@ -1,3 +1,3 @@
-/cygdrive/c/Users/user/Documents/GitRepos/MinhashSketch/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/cygdrive/c/Users/user/Documents/GitRepos/MinhashSketch/cmake-build-debug/CMakeFiles/edit_cache.dir
-/cygdrive/c/Users/user/Documents/GitRepos/MinhashSketch/cmake-build-debug/CMakeFiles/MinhashSketch.dir
+/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles/edit_cache.dir
+/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles/MinhashSketch.dir
