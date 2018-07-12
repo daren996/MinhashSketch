@@ -11,7 +11,8 @@ This will cost O[k*(l-k+1)] complexity to get each base and O(l-k+1) to caculate
 We can use a pointer to access this sequence, and directly assign four bases(A, C, T, G) to four kinds of 2-bit values in binary.
 
 Such as:
-<img src="./git_picture/process_of_taking_k-mers1.png" width="350" align=center /> k is 5 here.
+<img src="./git_picture/process_of_taking_k-mers1.png" width="350" align=center /> 
+k is 5 here.
 
 You will get the first k-mer subsequence, ATTGC, then transfer to 0011111001 in binary. Then move pointer to next pot. Then you can get the second k-mer, TTGCC. What you need to do now is left shift 2 bits of last k-mer in binary and add the 2-bit values in binary of new base.
 
