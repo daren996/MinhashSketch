@@ -28,9 +28,17 @@ So if we insert and pop the new value into the heap every time, the complexity w
 
 ### Change to a more reasonable hash function system
 
+Our hash function was ((a * x + b) % p) % m, all calculated using unsigned longs (uint64), where a and b is random values, p is prime and m is maximum of hash values. 
 
+Later I found some better hash functions to produce well-distributed 64 or 128-bit hash values for byte arrays of any length, such as [SpookyHash [2012 Bob Jenkins]](http://burtleburtle.net/bob/hash/spooky.html) and [CityHash [2011 Google, Inc.]](https://github.com/google/cityhash). I chose SpookyHash because CityHash requires CRC32 instruction in your machine's chips. 
+
+> SpookyHash is a public domain noncryptographic hash function producing well-distributed 128-bit hash values for byte arrays of any length. It can produce 64-bit and 32-bit hash values too, at the same speed, just use the bottom n bits. The C++ reference implementation is specific to 64-bit x86 platforms, in particular it assumes the processor is little endian. 
+
+Then I just need to give one seed and the length (i.e. k) to SpookyHash to get a hash values.
+
+**It should be noted that the subsequence we take out is represented by unsign long, so if the value of k (i.e. length of subsequence) is greater than 32, we need to save the substring in an array.**
 
 -------------------
-This is a project when I was internship at the University of Washington in St. Louis under the guidance of [Prof. Buhler](https://www.cse.wustl.edu/~jbuhler/).
+It is a project when I was internship at the University of Washington in St. Louis under the guidance of [Prof. Buhler](https://www.cse.wustl.edu/~jbuhler/).
 
  
