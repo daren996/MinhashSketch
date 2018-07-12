@@ -150,6 +150,33 @@ Minhash.cpp.s:
 	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/Minhash.cpp.s
 .PHONY : Minhash.cpp.s
 
+SpookyV2.o: SpookyV2.cpp.o
+
+.PHONY : SpookyV2.o
+
+# target to build an object file
+SpookyV2.cpp.o:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o
+.PHONY : SpookyV2.cpp.o
+
+SpookyV2.i: SpookyV2.cpp.i
+
+.PHONY : SpookyV2.i
+
+# target to preprocess a source file
+SpookyV2.cpp.i:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.i
+.PHONY : SpookyV2.cpp.i
+
+SpookyV2.s: SpookyV2.cpp.s
+
+.PHONY : SpookyV2.s
+
+# target to generate assembly for a file
+SpookyV2.cpp.s:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.s
+.PHONY : SpookyV2.cpp.s
+
 Utils.o: Utils.cpp.o
 
 .PHONY : Utils.o
@@ -216,6 +243,9 @@ help:
 	@echo "... Minhash.o"
 	@echo "... Minhash.i"
 	@echo "... Minhash.s"
+	@echo "... SpookyV2.o"
+	@echo "... SpookyV2.i"
+	@echo "... SpookyV2.s"
 	@echo "... Utils.o"
 	@echo "... Utils.i"
 	@echo "... Utils.s"

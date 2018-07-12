@@ -10,4 +10,4 @@ add_executable(MinhashSketch
         Minhash.cpp
         Minhash.h
         Utils.cpp
-        Utils.h)
+        Utils.h SpookyV2.cpp SpookyV2.h)

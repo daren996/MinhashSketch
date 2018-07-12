@@ -13,10 +13,11 @@
 #include <climits>
 #include <unordered_set>
 #include "Utils.h"
+#include "SpookyV2.h"
 
 using namespace std;
 
-typedef unsigned int h_type;
+typedef unsigned long h_type;
 typedef vector<vector<unsigned long>> signature;
 
 class Hash {
@@ -24,11 +25,15 @@ private:
     long a;
     long b;
     long p;
+
     bool is_prime(long x);
+
     long generateNextPrime(long n);
+
 public:
     Hash() = default;
-    Hash(h_type m, h_type u, int seed) {
+
+    Hash(unsigned long u, int seed) {
         p = generateNextPrime(u);
         mt19937 rng(seed);
         uniform_int_distribution<h_type> distA(1, static_cast<h_type>(p - 1));
@@ -36,15 +41,25 @@ public:
         a = distA(rng);
         b = distB(rng);
     }
-    unsigned long operator()(unsigned long k) const;
+
+    unsigned long operator()(unsigned long x) const;
+
+    unsigned long operator()(uint64 *x, int k) const;
 };
+
 vector<Hash> generateHashes(int t, int seed);
+
 void insertValue(unsigned long value, signature &s, unordered_set<unsigned long> &filter,
-                 const vector<Hash> &hashes, vector<unsigned long> heap_max_v);
+                 const vector<Hash> &hashes, vector<unsigned long> heap_max_v, int k);
+
 signature generateSignature(int k, int m, const string &file, const vector<Hash> &hashes);
-int computeSim(vector<int> v1, vector<int> v2);
+
+int computeSim(vector<unsigned long> v1, vector<unsigned long> v2);
+
 double computeSim(const signature &sig1, const signature &sig2);
+
 double computeSim(const string &file1, const string &file2, int k, int m, int t, int seed);
+
 bool cmp(int a, int b);
 
 #endif //MINHASHSKETCH_MINHASH_H

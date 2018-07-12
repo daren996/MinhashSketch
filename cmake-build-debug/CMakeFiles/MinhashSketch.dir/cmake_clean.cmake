@@ -2,6 +2,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/MinhashSketch.dir/main.cpp.o"
   "CMakeFiles/MinhashSketch.dir/Minhash.cpp.o"
   "CMakeFiles/MinhashSketch.dir/Utils.cpp.o"
+  "CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o"
   "MinhashSketch.pdb"
   "MinhashSketch.exe"
   "libMinhashSketch.dll.a"

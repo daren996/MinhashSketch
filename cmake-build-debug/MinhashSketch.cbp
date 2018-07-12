@@ -88,6 +88,12 @@
 		<Unit filename="/cygdrive/c/Git/MinhashSketch/Minhash.h">
 			<Option target="MinhashSketch"/>
 		</Unit>
+		<Unit filename="/cygdrive/c/Git/MinhashSketch/SpookyV2.cpp">
+			<Option target="MinhashSketch"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Git/MinhashSketch/SpookyV2.h">
+			<Option target="MinhashSketch"/>
+		</Unit>
 		<Unit filename="/cygdrive/c/Git/MinhashSketch/Utils.cpp">
 			<Option target="MinhashSketch"/>
 		</Unit>

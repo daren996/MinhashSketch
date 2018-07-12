@@ -18,6 +18,7 @@ bool Hash::is_prime(long x) {
     }
 }
 
+// Tip: Save next prime of 2^62 to get it faster
 long Hash::generateNextPrime(long n) {
     if (n <= 2) {
         return 2;
@@ -34,6 +35,9 @@ long Hash::generateNextPrime(long n) {
 unsigned long Hash::operator()(unsigned long x) const {
     return (a * x + b) % p;
 }
+unsigned long Hash::operator()(uint64 *x, int k) const {
+    return SpookyHash::Hash64(x, k, b);
+}
 
 
 vector<Hash> generateHashes(int t, int seed) {
@@ -41,16 +45,16 @@ vector<Hash> generateHashes(int t, int seed) {
     uniform_int_distribution<int> distribution(0, INT_MAX);
     vector<Hash> hashes(t);
     for (int i = 0; i < t; ++i) {
-        hashes[i] = Hash(INT_MAX, INT_MAX, distribution(rng));
+        hashes[i] = Hash(LONG_MAX, distribution(rng));
     }
     return hashes;
 }
 
-void insertValue(unsigned long value, signature &sig, unordered_set<unsigned long> &filter,
-                 const vector<Hash> &hashes, vector<unsigned long> heap_max_v) {
-    if (filter.insert(value).second) {
+void insertValue(uint64 *value, signature &sig, unordered_set<unsigned long> &filter,
+                 const vector<Hash> &hashes, vector<unsigned long> heap_max_v, int k) {
+    if (filter.insert(value[0]).second) {
         for (int h = 0; h < hashes.size(); ++h) {
-            unsigned long p = hashes[h](value);
+            unsigned long p = hashes[h](value, k*2);
             if (p < heap_max_v[h]) {
                 sig[h].push_back(p);
                 push_heap(sig[h].begin(), sig[h].end(), cmp);
@@ -61,9 +65,11 @@ void insertValue(unsigned long value, signature &sig, unordered_set<unsigned lon
     }
 }
 
+// Haven't written what to do if k is greater than 32
 signature generateSignature(int k, int m, const string &sequence, const vector<Hash> &hashes) {
     unsigned long s_index = 0; // pointer of current base
-    unsigned long cur_seq = 0; // current sub-sequence
+    uint64 cur_seq[k / 32 + 1]; // current sub-sequence
+    cur_seq[0] = 0;
     unordered_set<unsigned long> filter;
     signature sig(hashes.size(), vector<unsigned long>(m, ULONG_MAX ));
     vector<unsigned long> heap_max_v(m, ULONG_MAX );
@@ -71,12 +77,12 @@ signature generateSignature(int k, int m, const string &sequence, const vector<H
         make_heap(sig[h].begin(), sig[h].end(), cmp);
     }
     for (; s_index < k; ++s_index) {
-        cur_seq = (cur_seq << 2) % (unsigned long)pow(4, k) + utils::base2int(sequence[s_index]);
+        cur_seq[0] = (cur_seq[0] << 2) % (unsigned long)pow(4, k) + utils::base2int(sequence[s_index]);
     }
-    insertValue(cur_seq, sig, filter, hashes, heap_max_v);
+    insertValue(cur_seq, sig, filter, hashes, heap_max_v, k);
     for (; s_index < sequence.size(); ++s_index) {
-        cur_seq = (cur_seq << 2) % (unsigned long)pow(4, k) + utils::base2int(sequence[s_index]);
-        insertValue(cur_seq, sig, filter, hashes, heap_max_v);
+        cur_seq[0] = (cur_seq[0] << 2) % (unsigned long)pow(4, k) + utils::base2int(sequence[s_index]);
+        insertValue(cur_seq, sig, filter, hashes, heap_max_v, k);
     }
     for (int h = 0; h < sig.size(); ++h) {
         sort_heap(sig[h].begin(), sig[h].end(), cmp);
@@ -84,7 +90,7 @@ signature generateSignature(int k, int m, const string &sequence, const vector<H
     return sig;
 }
 
-int computeSim(vector<int> v1, vector<int> v2) {
+int computeSim(vector<unsigned long> v1, vector<unsigned long> v2) {
     int i = 0, j = 0, count = 0;
     while (i < v1.size() && j < v2.size()) {
         if (v1[i] == v2[j]) {
