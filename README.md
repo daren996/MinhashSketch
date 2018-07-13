@@ -50,6 +50,17 @@ For example, k is 100 here:
 
 <img src="./git_picture/Subsequence1.png" width="1000" align=center />
 
+### Running Example
+
+Parameter configuration: 
+
+1. k = 10
+2. m = 5
+3. t = 10
+
+<pr>
+<img src="./git_picture/running_example1.png" width="1000" align=center />
+
 -------------------
 It is a project when I was internship at the University of Washington in St. Louis under the guidance of [Prof. Buhler](https://www.cse.wustl.edu/~jbuhler/).
 

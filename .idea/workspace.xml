@@ -11,16 +11,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="903a5c8a-9e4a-420b-a4ff-442b31ff27d1" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minhash.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Minhash.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minhash.h" beforeDir="false" afterPath="$PROJECT_DIR$/Minhash.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MinhashSketch.dir/Minhash.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MinhashSketch.dir/Minhash.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MinhashSketch.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/MinhashSketch.dir/main.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/MinhashSketch.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/MinhashSketch.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-    </list>
+    <list default="true" id="903a5c8a-9e4a-420b-a4ff-442b31ff27d1" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -35,8 +26,11 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-315">
-              <caret line="9" selection-start-line="9" selection-end-line="9" />
+            <state relative-caret-position="2">
+              <caret line="27" column="11" lean-forward="true" selection-start-line="27" selection-start-column="11" selection-end-line="27" selection-end-column="11" />
+              <folding>
+                <element signature="e#0#20#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -165,7 +159,7 @@
     <packageJsonPaths />
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="28" />
     <option name="width" value="1346" />
     <option name="height" value="688" />
@@ -210,7 +204,7 @@
   </component>
   <component name="RunManager" selected="Application.MinhashSketch">
     <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="MinhashSketch" RUN_TARGET_NAME="MinhashSketch" EXPLICIT_BUILD_TARGET_NAME="all" />
-    <configuration name="MinhashSketch" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="../testing_files/sequence_clip1.fasta ../testing_files/sequence_clip3.fasta all -e --k=35 --m=50 --t=10" PASS_PARENT_ENVS_2="true" PROJECT_NAME="MinhashSketch" TARGET_NAME="MinhashSketch" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="MinhashSketch" RUN_TARGET_NAME="MinhashSketch" />
+    <configuration name="MinhashSketch" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="../testing_files/sequence_clip1.fasta ../testing_files/sequence_clip3.fasta all -e --k=10 --m=5 --t=10" PASS_PARENT_ENVS_2="true" PROJECT_NAME="MinhashSketch" TARGET_NAME="MinhashSketch" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="MinhashSketch" RUN_TARGET_NAME="MinhashSketch" />
     <list>
       <item itemvalue="Application.Build All" />
       <item itemvalue="Application.MinhashSketch" />
@@ -230,16 +224,15 @@
       <workItem from="1531154021045" duration="1227000" />
       <workItem from="1531169030021" duration="472000" />
       <workItem from="1531172222959" duration="965000" />
-      <workItem from="1531355206034" duration="28099000" />
+      <workItem from="1531355206034" duration="28345000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="57070000" />
+    <option name="totallyTimeSpent" value="57316000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17935579" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -248,7 +241,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32961783" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.38057324" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="1.0" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -277,6 +270,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="378">
           <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -534,10 +530,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-960" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-315">
-          <caret line="9" selection-start-line="9" selection-end-line="9" />
+        <state relative-caret-position="2">
+          <caret line="27" column="11" lean-forward="true" selection-start-line="27" selection-start-column="11" selection-end-line="27" selection-end-column="11" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
