@@ -37,14 +37,14 @@ Later I found some better hash functions to produce well-distributed 64 or 128-b
 
 Then I just need to give one seed and the length (i.e. k) to SpookyHash to get a hash values.
 
-**It should be noted that the subsequence we take out is represented by unsign long, so if the value of k (i.e. length of subsequence) is greater than 32, we need to save the substring in an array.**
+**It should be noted that the subsequence we take out is represented by uint64, so if the value of k (i.e. length of subsequence) is greater than 32, we need to save the substring in an array.**
 
 ## Some Description
 
 ### Subsequence
 
 We use a pointer to access sequence, which need noly to record the last base read, and directly assign four bases(A, C, T, G) to four kinds of 2-bit values in binary. 
-If the length of the subsequence exceeds 32 (i.e. one unsigned long is not enough to indicate the length of subsequences), we need to use more than one ([k / 32] + 1) uint64 to store subsequences.
+If the length of the subsequence exceeds 32 (i.e. one uint64 is not enough to indicate the length of subsequences), we need to use more than one ([k / 32] + 1) uint64 to store subsequences.
 
 For example, k is 100 here:
 

@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void output_signature(vector<vector<unsigned long>> sig1);
+void output_signature(vector<vector<uint64>> sig1);
 
 void help();
 
@@ -105,8 +105,8 @@ int main(int argc, char *argv[]) {
         mode_found = true;
         ini_time = clock();
         vector<Hash> hashes = generateHashes(t, seed);
-        vector<vector<unsigned long>> sig1 = generateSignature(k, m, sequence1, hashes);
-        vector<vector<unsigned long>> sig2 = generateSignature(k, m, sequence2, hashes);
+        vector<vector<uint64>> sig1 = generateSignature(k, m, sequence1, hashes);
+        vector<vector<uint64>> sig2 = generateSignature(k, m, sequence2, hashes);
         cout << "sig1" << endl;
         output_signature(sig1);
         cout << "\nsig2" << endl;
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
 
 }
 
-void output_signature(vector<vector<unsigned long>> sig1) {
+void output_signature(vector<vector<uint64>> sig1) {
     for (int h = 0; h < sig1.size(); ++h) {
         cout << "sig[" << h << "].size(): " << sig1[h].size() << "\t";
         for (int i = 0; i < sig1[h].size(); ++i) {

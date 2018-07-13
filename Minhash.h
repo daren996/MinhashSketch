@@ -17,44 +17,44 @@
 
 using namespace std;
 
-typedef uint64 h_type;
 typedef vector<vector<uint64>> signature;
 
 class Hash {
 private:
-    long a;
-    long b;
-    long p;
+    uint64 a;
+    uint64 b;
+    uint64 p;
 
-    bool is_prime(long x);
+    bool is_prime(long long int x);
 
-    long generateNextPrime(long n);
+    long long int generateNextPrime(long long int n);
 
 public:
     Hash() = default;
 
-    Hash(unsigned long u, int seed) {
-        p = generateNextPrime(u);
+    Hash(uint64 u, int seed) {
+//        p = generateNextPrime(static_cast<long long int>(u));
+        p = (uint64)13835058055282163729;
         mt19937 rng(seed);
-        uniform_int_distribution<h_type> distA(1, static_cast<h_type>(p - 1));
-        uniform_int_distribution<h_type> distB(0, static_cast<h_type>(p - 1));
+        uniform_int_distribution<uint64> distA(1, p - 1);
+        uniform_int_distribution<uint64> distB(0, p - 1);
         a = distA(rng);
         b = distB(rng);
     }
 
-    unsigned long operator()(unsigned long x) const;
+    uint64 operator()(uint64 x) const;
 
-    unsigned long operator()(uint64 *x, int k) const;
+    uint64 operator()(uint64 *x, int k) const;
 };
 
 vector<Hash> generateHashes(int t, int seed);
 
-void insertValue(unsigned long value, signature &s, unordered_set<uint64> &filter,
+void insertValue(uint64 *value, signature &s, unordered_set<uint64> *filter,
                  const vector<Hash> &hashes, vector<uint64> heap_max_v, int k);
 
 signature generateSignature(int k, int m, const string &file, const vector<Hash> &hashes);
 
-int computeSim(vector<unsigned long> v1, vector<unsigned long> v2);
+int computeSim(vector<uint64> v1, vector<uint64> v2);
 
 double computeSim(const signature &sig1, const signature &sig2);
 
