@@ -17,8 +17,8 @@
 
 using namespace std;
 
-typedef unsigned long h_type;
-typedef vector<vector<unsigned long>> signature;
+typedef uint64 h_type;
+typedef vector<vector<uint64>> signature;
 
 class Hash {
 private:
@@ -49,8 +49,8 @@ public:
 
 vector<Hash> generateHashes(int t, int seed);
 
-void insertValue(unsigned long value, signature &s, unordered_set<unsigned long> &filter,
-                 const vector<Hash> &hashes, vector<unsigned long> heap_max_v, int k);
+void insertValue(unsigned long value, signature &s, unordered_set<uint64> &filter,
+                 const vector<Hash> &hashes, vector<uint64> heap_max_v, int k);
 
 signature generateSignature(int k, int m, const string &file, const vector<Hash> &hashes);
 

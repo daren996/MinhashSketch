@@ -50,11 +50,11 @@ vector<Hash> generateHashes(int t, int seed) {
     return hashes;
 }
 
-void insertValue(uint64 *value, signature &sig, unordered_set<unsigned long> &filter,
-                 const vector<Hash> &hashes, vector<unsigned long> heap_max_v, int k) {
+void insertValue(uint64 *value, signature &sig, unordered_set<uint64> &filter,
+                 const vector<Hash> &hashes, vector<uint64> heap_max_v, int k) {
     if (filter.insert(value[0]).second) {
         for (int h = 0; h < hashes.size(); ++h) {
-            unsigned long p = hashes[h](value, k*2);
+            uint64 p = hashes[h](value, k*2);
             if (p < heap_max_v[h]) {
                 sig[h].push_back(p);
                 push_heap(sig[h].begin(), sig[h].end(), cmp);
@@ -67,22 +67,40 @@ void insertValue(uint64 *value, signature &sig, unordered_set<unsigned long> &fi
 
 // Haven't written what to do if k is greater than 32
 signature generateSignature(int k, int m, const string &sequence, const vector<Hash> &hashes) {
-    unsigned long s_index = 0; // pointer of current base
+    uint64 s_index = 0; // pointer of current base
     uint64 cur_seq[k / 32 + 1]; // current sub-sequence
-    cur_seq[0] = 0;
-    unordered_set<unsigned long> filter;
-    signature sig(hashes.size(), vector<unsigned long>(m, ULONG_MAX ));
-    vector<unsigned long> heap_max_v(m, ULONG_MAX );
+    for (int i = 0; i < k / 32 + 1; ++i) {
+        cur_seq[i] = 0;
+    }
+    unordered_set<uint64> filter;
+    signature sig(hashes.size(), vector<uint64>(m, UINT64_MAX ));
+    vector<uint64> heap_max_v(m, UINT64_MAX );
     for (int h = 0; h < hashes.size(); ++h) {
         make_heap(sig[h].begin(), sig[h].end(), cmp);
     }
-    for (; s_index < k; ++s_index) {
-        cur_seq[0] = (cur_seq[0] << 2) % (unsigned long)pow(4, k) + utils::base2int(sequence[s_index]);
-    }
-    insertValue(cur_seq, sig, filter, hashes, heap_max_v, k);
-    for (; s_index < sequence.size(); ++s_index) {
-        cur_seq[0] = (cur_seq[0] << 2) % (unsigned long)pow(4, k) + utils::base2int(sequence[s_index]);
+    if (k < 32) {
+        for (; s_index < k; ++s_index) {
+            cur_seq[0] = (cur_seq[0] << 2) % (uint64)pow(4, k) + utils::base2int(sequence[s_index]);
+        }
         insertValue(cur_seq, sig, filter, hashes, heap_max_v, k);
+        for (; s_index < sequence.size(); ++s_index) {
+            cur_seq[0] = (cur_seq[0] << 2) % (uint64)pow(4, k) + utils::base2int(sequence[s_index]);
+            insertValue(cur_seq, sig, filter, hashes, heap_max_v, k);
+        }
+    } else {
+        for (; s_index < k; ++s_index) {
+            cur_seq[s_index / 32] = (cur_seq[s_index / 32] << 2) % UINT64_MAX + utils::base2int(sequence[s_index]);
+        }
+        insertValue(cur_seq, sig, filter, hashes, heap_max_v, k);
+
+        for (; s_index < sequence.size(); ++s_index) {
+            for (int i = 0; i < k / 32 - 1; ++i) {
+                cur_seq[i] = (cur_seq[i] << 2) + (cur_seq[i + 1] >> 62);
+            }
+            cur_seq[k / 32 - 1] = (cur_seq[k / 32 - 1] << 2) + (cur_seq[k / 32] >> ((k % 32) * 2));
+            cur_seq[k / 32] = (cur_seq[k / 32] << 2) % (uint64)pow(4, k % 32) + utils::base2int(sequence[s_index]);
+            insertValue(cur_seq, sig, filter, hashes, heap_max_v, k);
+        }
     }
     for (int h = 0; h < sig.size(); ++h) {
         sort_heap(sig[h].begin(), sig[h].end(), cmp);
