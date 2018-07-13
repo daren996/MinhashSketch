@@ -1,7 +1,7 @@
 # MinhashSketch
 
 
-## Some improvements when implementing the algorithm
+## Improvements when implementing the algorithm
 When meeting with Prof. Buhler, I got several tips about the implemention.
 
 ### Simplify the process of taking k-mers subsequence
@@ -39,7 +39,7 @@ Then I just need to give one seed and the length (i.e. k) to SpookyHash to get a
 
 **It should be noted that the subsequence we take out is represented by uint64, so if the value of k (i.e. length of subsequence) is greater than 32, we need to save the substring in an array.**
 
-## Some Description
+## Description
 
 ### Subsequence
 
