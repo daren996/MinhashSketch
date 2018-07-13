@@ -48,7 +48,7 @@ If the length of the subsequence exceeds 32 (i.e. one unsigned long is not enoug
 
 For example, k is 100 here:
 
-<img src="./git_picture/Subsequence1.png" width="800" align=center />
+<img src="./git_picture/Subsequence1.png" width="1000" align=center />
 
 -------------------
 It is a project when I was internship at the University of Washington in St. Louis under the guidance of [Prof. Buhler](https://www.cse.wustl.edu/~jbuhler/).
