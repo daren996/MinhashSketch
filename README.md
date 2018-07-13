@@ -2,7 +2,7 @@
 
 
 ## Improvements when implementing the algorithm
-When meeting with Prof. Buhler, I got several tips about the implemention.
+When meeting with Prof. Buhler, I got several tips about the implement.
 
 ### Simplify the process of taking k-mers subsequence
 
