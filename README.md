@@ -1,5 +1,7 @@
 # MinhashSketch
 
+It is a project when I was internship at the University of Washington in St. Louis under the guidance of [Prof. Buhler](https://www.cse.wustl.edu/~jbuhler/).
+
 ## Description
 
 ### Subsequence
