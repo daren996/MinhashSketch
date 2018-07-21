@@ -2,7 +2,7 @@
 // Created by Darren on 2018/7/6.
 //
 
-#include "Minhash.h"
+#include "Hash.h"
 
 bool Hash::is_prime(long long int x) {
     long long int i = 3;
@@ -109,7 +109,6 @@ signature generateSignature(int k, int m, const string &sequence, const vector<H
                 cerr << "ERROR:" << endl << "\t index: " << s_index << endl << "\t base: " << sequence[s_index]  << endl;
         }
         insertValue(cur_seq, sig, filter, hashes, heap_max_v, k);
-
         for (; s_index < sequence.size(); ++s_index) {
             for (int i = 0; i < k / 32 - 1; ++i) {
                 cur_seq[i] = (cur_seq[i] << 2) + (cur_seq[i + 1] >> 62);

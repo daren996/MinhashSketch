@@ -57,119 +57,171 @@ include CMakeFiles/MinhashSketch.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/MinhashSketch.dir/flags.make
 
-CMakeFiles/MinhashSketch.dir/main.cpp.o: CMakeFiles/MinhashSketch.dir/flags.make
-CMakeFiles/MinhashSketch.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/MinhashSketch.dir/main.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MinhashSketch.dir/main.cpp.o -c /cygdrive/c/Git/MinhashSketch/main.cpp
+CMakeFiles/MinhashSketch.dir/src/main.cpp.o: CMakeFiles/MinhashSketch.dir/flags.make
+CMakeFiles/MinhashSketch.dir/src/main.cpp.o: ../src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/MinhashSketch.dir/src/main.cpp.o"
+	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MinhashSketch.dir/src/main.cpp.o -c /cygdrive/c/Git/MinhashSketch/src/main.cpp
 
-CMakeFiles/MinhashSketch.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MinhashSketch.dir/main.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/c/Git/MinhashSketch/main.cpp > CMakeFiles/MinhashSketch.dir/main.cpp.i
+CMakeFiles/MinhashSketch.dir/src/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MinhashSketch.dir/src/main.cpp.i"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/c/Git/MinhashSketch/src/main.cpp > CMakeFiles/MinhashSketch.dir/src/main.cpp.i
 
-CMakeFiles/MinhashSketch.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MinhashSketch.dir/main.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/c/Git/MinhashSketch/main.cpp -o CMakeFiles/MinhashSketch.dir/main.cpp.s
+CMakeFiles/MinhashSketch.dir/src/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MinhashSketch.dir/src/main.cpp.s"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/c/Git/MinhashSketch/src/main.cpp -o CMakeFiles/MinhashSketch.dir/src/main.cpp.s
 
-CMakeFiles/MinhashSketch.dir/main.cpp.o.requires:
+CMakeFiles/MinhashSketch.dir/src/main.cpp.o.requires:
 
-.PHONY : CMakeFiles/MinhashSketch.dir/main.cpp.o.requires
+.PHONY : CMakeFiles/MinhashSketch.dir/src/main.cpp.o.requires
 
-CMakeFiles/MinhashSketch.dir/main.cpp.o.provides: CMakeFiles/MinhashSketch.dir/main.cpp.o.requires
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/main.cpp.o.provides.build
-.PHONY : CMakeFiles/MinhashSketch.dir/main.cpp.o.provides
+CMakeFiles/MinhashSketch.dir/src/main.cpp.o.provides: CMakeFiles/MinhashSketch.dir/src/main.cpp.o.requires
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/main.cpp.o.provides.build
+.PHONY : CMakeFiles/MinhashSketch.dir/src/main.cpp.o.provides
 
-CMakeFiles/MinhashSketch.dir/main.cpp.o.provides.build: CMakeFiles/MinhashSketch.dir/main.cpp.o
-
-
-CMakeFiles/MinhashSketch.dir/Minhash.cpp.o: CMakeFiles/MinhashSketch.dir/flags.make
-CMakeFiles/MinhashSketch.dir/Minhash.cpp.o: ../Minhash.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/MinhashSketch.dir/Minhash.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MinhashSketch.dir/Minhash.cpp.o -c /cygdrive/c/Git/MinhashSketch/Minhash.cpp
-
-CMakeFiles/MinhashSketch.dir/Minhash.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MinhashSketch.dir/Minhash.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/c/Git/MinhashSketch/Minhash.cpp > CMakeFiles/MinhashSketch.dir/Minhash.cpp.i
-
-CMakeFiles/MinhashSketch.dir/Minhash.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MinhashSketch.dir/Minhash.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/c/Git/MinhashSketch/Minhash.cpp -o CMakeFiles/MinhashSketch.dir/Minhash.cpp.s
-
-CMakeFiles/MinhashSketch.dir/Minhash.cpp.o.requires:
-
-.PHONY : CMakeFiles/MinhashSketch.dir/Minhash.cpp.o.requires
-
-CMakeFiles/MinhashSketch.dir/Minhash.cpp.o.provides: CMakeFiles/MinhashSketch.dir/Minhash.cpp.o.requires
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/Minhash.cpp.o.provides.build
-.PHONY : CMakeFiles/MinhashSketch.dir/Minhash.cpp.o.provides
-
-CMakeFiles/MinhashSketch.dir/Minhash.cpp.o.provides.build: CMakeFiles/MinhashSketch.dir/Minhash.cpp.o
+CMakeFiles/MinhashSketch.dir/src/main.cpp.o.provides.build: CMakeFiles/MinhashSketch.dir/src/main.cpp.o
 
 
-CMakeFiles/MinhashSketch.dir/Utils.cpp.o: CMakeFiles/MinhashSketch.dir/flags.make
-CMakeFiles/MinhashSketch.dir/Utils.cpp.o: ../Utils.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/MinhashSketch.dir/Utils.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MinhashSketch.dir/Utils.cpp.o -c /cygdrive/c/Git/MinhashSketch/Utils.cpp
+CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o: CMakeFiles/MinhashSketch.dir/flags.make
+CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o: ../src/Hash.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o"
+	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o -c /cygdrive/c/Git/MinhashSketch/src/Hash.cpp
 
-CMakeFiles/MinhashSketch.dir/Utils.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MinhashSketch.dir/Utils.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/c/Git/MinhashSketch/Utils.cpp > CMakeFiles/MinhashSketch.dir/Utils.cpp.i
+CMakeFiles/MinhashSketch.dir/src/Hash.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MinhashSketch.dir/src/Hash.cpp.i"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/c/Git/MinhashSketch/src/Hash.cpp > CMakeFiles/MinhashSketch.dir/src/Hash.cpp.i
 
-CMakeFiles/MinhashSketch.dir/Utils.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MinhashSketch.dir/Utils.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/c/Git/MinhashSketch/Utils.cpp -o CMakeFiles/MinhashSketch.dir/Utils.cpp.s
+CMakeFiles/MinhashSketch.dir/src/Hash.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MinhashSketch.dir/src/Hash.cpp.s"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/c/Git/MinhashSketch/src/Hash.cpp -o CMakeFiles/MinhashSketch.dir/src/Hash.cpp.s
 
-CMakeFiles/MinhashSketch.dir/Utils.cpp.o.requires:
+CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o.requires:
 
-.PHONY : CMakeFiles/MinhashSketch.dir/Utils.cpp.o.requires
+.PHONY : CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o.requires
 
-CMakeFiles/MinhashSketch.dir/Utils.cpp.o.provides: CMakeFiles/MinhashSketch.dir/Utils.cpp.o.requires
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/Utils.cpp.o.provides.build
-.PHONY : CMakeFiles/MinhashSketch.dir/Utils.cpp.o.provides
+CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o.provides: CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o.requires
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o.provides.build
+.PHONY : CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o.provides
 
-CMakeFiles/MinhashSketch.dir/Utils.cpp.o.provides.build: CMakeFiles/MinhashSketch.dir/Utils.cpp.o
+CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o.provides.build: CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o
 
 
-CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o: CMakeFiles/MinhashSketch.dir/flags.make
-CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o: ../SpookyV2.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o"
-	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o -c /cygdrive/c/Git/MinhashSketch/SpookyV2.cpp
+CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o: CMakeFiles/MinhashSketch.dir/flags.make
+CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o: ../src/Utils.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o"
+	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o -c /cygdrive/c/Git/MinhashSketch/src/Utils.cpp
 
-CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.i"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/c/Git/MinhashSketch/SpookyV2.cpp > CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.i
+CMakeFiles/MinhashSketch.dir/src/Utils.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MinhashSketch.dir/src/Utils.cpp.i"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/c/Git/MinhashSketch/src/Utils.cpp > CMakeFiles/MinhashSketch.dir/src/Utils.cpp.i
 
-CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.s"
-	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/c/Git/MinhashSketch/SpookyV2.cpp -o CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.s
+CMakeFiles/MinhashSketch.dir/src/Utils.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MinhashSketch.dir/src/Utils.cpp.s"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/c/Git/MinhashSketch/src/Utils.cpp -o CMakeFiles/MinhashSketch.dir/src/Utils.cpp.s
 
-CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o.requires:
+CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o.requires:
 
-.PHONY : CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o.requires
+.PHONY : CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o.requires
 
-CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o.provides: CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o.requires
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o.provides.build
-.PHONY : CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o.provides
+CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o.provides: CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o.requires
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o.provides.build
+.PHONY : CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o.provides
 
-CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o.provides.build: CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o
+CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o.provides.build: CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o
+
+
+CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o: CMakeFiles/MinhashSketch.dir/flags.make
+CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o: ../src/SpookyV2.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o"
+	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o -c /cygdrive/c/Git/MinhashSketch/src/SpookyV2.cpp
+
+CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.i"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/c/Git/MinhashSketch/src/SpookyV2.cpp > CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.i
+
+CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.s"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/c/Git/MinhashSketch/src/SpookyV2.cpp -o CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.s
+
+CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o.requires:
+
+.PHONY : CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o.requires
+
+CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o.provides: CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o.requires
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o.provides.build
+.PHONY : CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o.provides
+
+CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o.provides.build: CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o
+
+
+CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o: CMakeFiles/MinhashSketch.dir/flags.make
+CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o: ../src/Radix.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o"
+	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o -c /cygdrive/c/Git/MinhashSketch/src/Radix.cpp
+
+CMakeFiles/MinhashSketch.dir/src/Radix.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MinhashSketch.dir/src/Radix.cpp.i"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/c/Git/MinhashSketch/src/Radix.cpp > CMakeFiles/MinhashSketch.dir/src/Radix.cpp.i
+
+CMakeFiles/MinhashSketch.dir/src/Radix.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MinhashSketch.dir/src/Radix.cpp.s"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/c/Git/MinhashSketch/src/Radix.cpp -o CMakeFiles/MinhashSketch.dir/src/Radix.cpp.s
+
+CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o.requires:
+
+.PHONY : CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o.requires
+
+CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o.provides: CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o.requires
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o.provides.build
+.PHONY : CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o.provides
+
+CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o.provides.build: CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o
+
+
+CMakeFiles/MinhashSketch.dir/src/Help.cpp.o: CMakeFiles/MinhashSketch.dir/flags.make
+CMakeFiles/MinhashSketch.dir/src/Help.cpp.o: ../src/Help.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/MinhashSketch.dir/src/Help.cpp.o"
+	/usr/bin/c++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/MinhashSketch.dir/src/Help.cpp.o -c /cygdrive/c/Git/MinhashSketch/src/Help.cpp
+
+CMakeFiles/MinhashSketch.dir/src/Help.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/MinhashSketch.dir/src/Help.cpp.i"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /cygdrive/c/Git/MinhashSketch/src/Help.cpp > CMakeFiles/MinhashSketch.dir/src/Help.cpp.i
+
+CMakeFiles/MinhashSketch.dir/src/Help.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/MinhashSketch.dir/src/Help.cpp.s"
+	/usr/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /cygdrive/c/Git/MinhashSketch/src/Help.cpp -o CMakeFiles/MinhashSketch.dir/src/Help.cpp.s
+
+CMakeFiles/MinhashSketch.dir/src/Help.cpp.o.requires:
+
+.PHONY : CMakeFiles/MinhashSketch.dir/src/Help.cpp.o.requires
+
+CMakeFiles/MinhashSketch.dir/src/Help.cpp.o.provides: CMakeFiles/MinhashSketch.dir/src/Help.cpp.o.requires
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Help.cpp.o.provides.build
+.PHONY : CMakeFiles/MinhashSketch.dir/src/Help.cpp.o.provides
+
+CMakeFiles/MinhashSketch.dir/src/Help.cpp.o.provides.build: CMakeFiles/MinhashSketch.dir/src/Help.cpp.o
 
 
 # Object files for target MinhashSketch
 MinhashSketch_OBJECTS = \
-"CMakeFiles/MinhashSketch.dir/main.cpp.o" \
-"CMakeFiles/MinhashSketch.dir/Minhash.cpp.o" \
-"CMakeFiles/MinhashSketch.dir/Utils.cpp.o" \
-"CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o"
+"CMakeFiles/MinhashSketch.dir/src/main.cpp.o" \
+"CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o" \
+"CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o" \
+"CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o" \
+"CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o" \
+"CMakeFiles/MinhashSketch.dir/src/Help.cpp.o"
 
 # External object files for target MinhashSketch
 MinhashSketch_EXTERNAL_OBJECTS =
 
-MinhashSketch.exe: CMakeFiles/MinhashSketch.dir/main.cpp.o
-MinhashSketch.exe: CMakeFiles/MinhashSketch.dir/Minhash.cpp.o
-MinhashSketch.exe: CMakeFiles/MinhashSketch.dir/Utils.cpp.o
-MinhashSketch.exe: CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o
+MinhashSketch.exe: CMakeFiles/MinhashSketch.dir/src/main.cpp.o
+MinhashSketch.exe: CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o
+MinhashSketch.exe: CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o
+MinhashSketch.exe: CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o
+MinhashSketch.exe: CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o
+MinhashSketch.exe: CMakeFiles/MinhashSketch.dir/src/Help.cpp.o
 MinhashSketch.exe: CMakeFiles/MinhashSketch.dir/build.make
 MinhashSketch.exe: CMakeFiles/MinhashSketch.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable MinhashSketch.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable MinhashSketch.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/MinhashSketch.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -177,10 +229,12 @@ CMakeFiles/MinhashSketch.dir/build: MinhashSketch.exe
 
 .PHONY : CMakeFiles/MinhashSketch.dir/build
 
-CMakeFiles/MinhashSketch.dir/requires: CMakeFiles/MinhashSketch.dir/main.cpp.o.requires
-CMakeFiles/MinhashSketch.dir/requires: CMakeFiles/MinhashSketch.dir/Minhash.cpp.o.requires
-CMakeFiles/MinhashSketch.dir/requires: CMakeFiles/MinhashSketch.dir/Utils.cpp.o.requires
-CMakeFiles/MinhashSketch.dir/requires: CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o.requires
+CMakeFiles/MinhashSketch.dir/requires: CMakeFiles/MinhashSketch.dir/src/main.cpp.o.requires
+CMakeFiles/MinhashSketch.dir/requires: CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o.requires
+CMakeFiles/MinhashSketch.dir/requires: CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o.requires
+CMakeFiles/MinhashSketch.dir/requires: CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o.requires
+CMakeFiles/MinhashSketch.dir/requires: CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o.requires
+CMakeFiles/MinhashSketch.dir/requires: CMakeFiles/MinhashSketch.dir/src/Help.cpp.o.requires
 
 .PHONY : CMakeFiles/MinhashSketch.dir/requires
 

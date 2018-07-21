@@ -123,113 +123,167 @@ MinhashSketch/fast:
 	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/build
 .PHONY : MinhashSketch/fast
 
-Minhash.o: Minhash.cpp.o
+src/Hash.o: src/Hash.cpp.o
 
-.PHONY : Minhash.o
-
-# target to build an object file
-Minhash.cpp.o:
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/Minhash.cpp.o
-.PHONY : Minhash.cpp.o
-
-Minhash.i: Minhash.cpp.i
-
-.PHONY : Minhash.i
-
-# target to preprocess a source file
-Minhash.cpp.i:
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/Minhash.cpp.i
-.PHONY : Minhash.cpp.i
-
-Minhash.s: Minhash.cpp.s
-
-.PHONY : Minhash.s
-
-# target to generate assembly for a file
-Minhash.cpp.s:
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/Minhash.cpp.s
-.PHONY : Minhash.cpp.s
-
-SpookyV2.o: SpookyV2.cpp.o
-
-.PHONY : SpookyV2.o
+.PHONY : src/Hash.o
 
 # target to build an object file
-SpookyV2.cpp.o:
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.o
-.PHONY : SpookyV2.cpp.o
+src/Hash.cpp.o:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Hash.cpp.o
+.PHONY : src/Hash.cpp.o
 
-SpookyV2.i: SpookyV2.cpp.i
+src/Hash.i: src/Hash.cpp.i
 
-.PHONY : SpookyV2.i
+.PHONY : src/Hash.i
 
 # target to preprocess a source file
-SpookyV2.cpp.i:
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.i
-.PHONY : SpookyV2.cpp.i
+src/Hash.cpp.i:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Hash.cpp.i
+.PHONY : src/Hash.cpp.i
 
-SpookyV2.s: SpookyV2.cpp.s
+src/Hash.s: src/Hash.cpp.s
 
-.PHONY : SpookyV2.s
+.PHONY : src/Hash.s
 
 # target to generate assembly for a file
-SpookyV2.cpp.s:
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/SpookyV2.cpp.s
-.PHONY : SpookyV2.cpp.s
+src/Hash.cpp.s:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Hash.cpp.s
+.PHONY : src/Hash.cpp.s
 
-Utils.o: Utils.cpp.o
+src/Help.o: src/Help.cpp.o
 
-.PHONY : Utils.o
+.PHONY : src/Help.o
 
 # target to build an object file
-Utils.cpp.o:
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/Utils.cpp.o
-.PHONY : Utils.cpp.o
+src/Help.cpp.o:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Help.cpp.o
+.PHONY : src/Help.cpp.o
 
-Utils.i: Utils.cpp.i
+src/Help.i: src/Help.cpp.i
 
-.PHONY : Utils.i
+.PHONY : src/Help.i
 
 # target to preprocess a source file
-Utils.cpp.i:
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/Utils.cpp.i
-.PHONY : Utils.cpp.i
+src/Help.cpp.i:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Help.cpp.i
+.PHONY : src/Help.cpp.i
 
-Utils.s: Utils.cpp.s
+src/Help.s: src/Help.cpp.s
 
-.PHONY : Utils.s
+.PHONY : src/Help.s
 
 # target to generate assembly for a file
-Utils.cpp.s:
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/Utils.cpp.s
-.PHONY : Utils.cpp.s
+src/Help.cpp.s:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Help.cpp.s
+.PHONY : src/Help.cpp.s
 
-main.o: main.cpp.o
+src/Radix.o: src/Radix.cpp.o
 
-.PHONY : main.o
+.PHONY : src/Radix.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/main.cpp.o
-.PHONY : main.cpp.o
+src/Radix.cpp.o:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Radix.cpp.o
+.PHONY : src/Radix.cpp.o
 
-main.i: main.cpp.i
+src/Radix.i: src/Radix.cpp.i
 
-.PHONY : main.i
+.PHONY : src/Radix.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/main.cpp.i
-.PHONY : main.cpp.i
+src/Radix.cpp.i:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Radix.cpp.i
+.PHONY : src/Radix.cpp.i
 
-main.s: main.cpp.s
+src/Radix.s: src/Radix.cpp.s
 
-.PHONY : main.s
+.PHONY : src/Radix.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/main.cpp.s
-.PHONY : main.cpp.s
+src/Radix.cpp.s:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Radix.cpp.s
+.PHONY : src/Radix.cpp.s
+
+src/SpookyV2.o: src/SpookyV2.cpp.o
+
+.PHONY : src/SpookyV2.o
+
+# target to build an object file
+src/SpookyV2.cpp.o:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.o
+.PHONY : src/SpookyV2.cpp.o
+
+src/SpookyV2.i: src/SpookyV2.cpp.i
+
+.PHONY : src/SpookyV2.i
+
+# target to preprocess a source file
+src/SpookyV2.cpp.i:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.i
+.PHONY : src/SpookyV2.cpp.i
+
+src/SpookyV2.s: src/SpookyV2.cpp.s
+
+.PHONY : src/SpookyV2.s
+
+# target to generate assembly for a file
+src/SpookyV2.cpp.s:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/SpookyV2.cpp.s
+.PHONY : src/SpookyV2.cpp.s
+
+src/Utils.o: src/Utils.cpp.o
+
+.PHONY : src/Utils.o
+
+# target to build an object file
+src/Utils.cpp.o:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Utils.cpp.o
+.PHONY : src/Utils.cpp.o
+
+src/Utils.i: src/Utils.cpp.i
+
+.PHONY : src/Utils.i
+
+# target to preprocess a source file
+src/Utils.cpp.i:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Utils.cpp.i
+.PHONY : src/Utils.cpp.i
+
+src/Utils.s: src/Utils.cpp.s
+
+.PHONY : src/Utils.s
+
+# target to generate assembly for a file
+src/Utils.cpp.s:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/Utils.cpp.s
+.PHONY : src/Utils.cpp.s
+
+src/main.o: src/main.cpp.o
+
+.PHONY : src/main.o
+
+# target to build an object file
+src/main.cpp.o:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/main.cpp.o
+.PHONY : src/main.cpp.o
+
+src/main.i: src/main.cpp.i
+
+.PHONY : src/main.i
+
+# target to preprocess a source file
+src/main.cpp.i:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
+
+src/main.s: src/main.cpp.s
+
+.PHONY : src/main.s
+
+# target to generate assembly for a file
+src/main.cpp.s:
+	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
 
 # Help Target
 help:
@@ -240,18 +294,24 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... MinhashSketch"
-	@echo "... Minhash.o"
-	@echo "... Minhash.i"
-	@echo "... Minhash.s"
-	@echo "... SpookyV2.o"
-	@echo "... SpookyV2.i"
-	@echo "... SpookyV2.s"
-	@echo "... Utils.o"
-	@echo "... Utils.i"
-	@echo "... Utils.s"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... src/Hash.o"
+	@echo "... src/Hash.i"
+	@echo "... src/Hash.s"
+	@echo "... src/Help.o"
+	@echo "... src/Help.i"
+	@echo "... src/Help.s"
+	@echo "... src/Radix.o"
+	@echo "... src/Radix.i"
+	@echo "... src/Radix.s"
+	@echo "... src/SpookyV2.o"
+	@echo "... src/SpookyV2.i"
+	@echo "... src/SpookyV2.s"
+	@echo "... src/Utils.o"
+	@echo "... src/Utils.i"
+	@echo "... src/Utils.s"
+	@echo "... src/main.o"
+	@echo "... src/main.i"
+	@echo "... src/main.s"
 .PHONY : help
 
 

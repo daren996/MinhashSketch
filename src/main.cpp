@@ -7,15 +7,12 @@
 #include <vector>
 #include <string>
 
-#include "Minhash.h"
+#include "Radix.h"
+#include "Help.h"
 
 using namespace std;
 
 void output_signature(vector<vector<uint64>> sig1);
-
-void help();
-
-void usage();
 
 // MinhashSketch.exe ../testing_files/sequence_clip1.fasta ../testing_files/sequence_clip2.fasta all -e --k=5 --m=10 --t=10
 int main(int argc, char *argv[]) {
@@ -96,7 +93,8 @@ int main(int argc, char *argv[]) {
     bool mode_found = false;
     double similarity, time;
     list<tuple<string, double, double>> results;
-    if (cal_name == "all" || cal_name == "minhash") {
+    vector<Hash> hashes = generateHashes(t, seed);
+    if (cal_name == "all" || cal_name == "minhash_regular") {
         if (t < 1) {
             cerr << endl;
             cerr << "You must provide a parameter --t=POSITIVE_INTEGER parameter for minhash modes!" << endl << endl;
@@ -104,9 +102,8 @@ int main(int argc, char *argv[]) {
         }
         mode_found = true;
         ini_time = clock();
-        vector<Hash> hashes = generateHashes(t, seed);
-        vector<vector<uint64>> sig1 = generateSignature(k, m, sequence1, hashes);
-        vector<vector<uint64>> sig2 = generateSignature(k, m, sequence2, hashes);
+        vector<vector<uint64>> sig1 = rs::genSig_single(k, m, sequence1, hashes);
+        vector<vector<uint64>> sig2 = rs::genSig_single(k, m, sequence2, hashes);
         cout << "sig1" << endl;
         output_signature(sig1);
         cout << "\nsig2" << endl;
@@ -114,7 +111,27 @@ int main(int argc, char *argv[]) {
         cout << endl;
         similarity = computeSim(sig1, sig2);
         time = double(clock() - ini_time) / CLOCKS_PER_SEC;
-        results.emplace_back("minhash", similarity, time);
+        results.emplace_back("minhash_regular", similarity, time);
+    }
+    if (cal_name == "all" || cal_name == "minhash_parallel") {
+        if (t < 1) {
+            cerr << endl;
+            cerr << "You must provide a parameter --t=POSITIVE_INTEGER parameter for minhash modes!" << endl << endl;
+            exit(1);
+        }
+        mode_found = true;
+        ini_time = clock();
+        // vector<Hash> hashes = generateHashes(t, seed);
+        vector<vector<uint64>> sig1 = rs::genSig_multi(k, m, sequence1, hashes);
+        vector<vector<uint64>> sig2 = rs::genSig_multi(k, m, sequence2, hashes);
+        cout << "sig1:  size:" << sig1[0].size() << endl;
+        output_signature(sig1);
+        cout << "\nsig2:  size:" << sig2[0].size() << endl;
+        output_signature(sig2);
+        cout << endl;
+        similarity = computeSim(sig1, sig2);
+        time = double(clock() - ini_time) / CLOCKS_PER_SEC;
+        results.emplace_back("minhash_parallel", similarity, time);
     }
     if (!mode_found) usage();
 
@@ -146,75 +163,8 @@ void output_signature(vector<vector<uint64>> sig1) {
     for (int h = 0; h < sig1.size(); ++h) {
         cout << "sig[" << h << "].size(): " << sig1[h].size() << "\t";
         for (int i = 0; i < sig1[h].size(); ++i) {
-            cout << sig1[h][i] << " ";
+            cout << hex << sig1[h][i] << dec << " ";
         }
         cout << endl;
     }
-}
-
-void usage() {
-    cout << "===========================" << endl;
-    cerr << "Usage: " << endl << endl;
-    cerr << "    ./MinhashSketch FILE_ONE FILE_TWO MODE" << endl;
-    cerr << endl;
-    cerr << "    Possible MODEs are:" << endl;
-    cerr << endl << bold_on;
-    cerr << "        all" << endl;
-    cerr << endl;
-    cerr << "        minhash" << endl;
-    cerr << endl;
-    cerr << "Execute \"MinhashSketch help\" for an extended help section." << endl;
-    cout << "===========================" << endl;
-    exit(1);
-}
-
-void help() {
-    cout << endl;
-    cout << bold_on << "NAME" << bold_off << endl;
-    cout << "    " << "MinhashSketch" << endl;
-    cout << endl;
-    cout << bold_on << "USAGE" << bold_off << endl;
-    cout << "    " << "MinhashSketch FILE_ONE FILE_TWO " << bold_on << "MODE [PARAMETERS...]" << bold_off << endl;
-    cout << endl;
-    cout << "    " << "MinhashSketch calculates the similarity between two text files FILE_ONE and FILE_TWO" << endl;
-    cout << "    " << "and outputs it as a number between 0 and 1, where 1 means the two files are exactly" << endl;
-    cout << "    " << "the same." << endl;
-    cout << endl;
-    cout << bold_on << "MODE" << bold_off << endl;
-    cout << "    " << "There are modes which change the way MinhashSketch computes the similarity. " << endl;
-    cout << "    " << "Each may make use of different parameters, indicated as follows:" << endl;;
-    cout << endl;
-    cout << "    " << bold_on << "all" << bold_off << endl;
-    cout << "        " << "This option executes all modes." << endl;
-    cout << endl;
-    cout << "    " << bold_on << "minhash" << bold_off << endl;
-    cout << "        " << "Calculates the similarity by computing minhash signatures for each sequence. Used" << endl;
-    cout << "        " << "parameters are." << endl;
-    cout << endl;
-    cout << "            " << "--k=POSITIVE_INTEGER as shingle size" << endl;
-    cout << endl;
-    cout << "            " << "--t=POSITIVE_INTEGER" << bold_on << " (obligatory) " << bold_off
-         << "as number of hash functions used" << endl;
-    cout << endl;
-    cout << "            " << "--seed=INTEGER as random generator seed" << endl;
-    cout << endl;
-    cout << bold_on << "PARAMETERS" << bold_off << endl;
-    cout << endl;
-    cout << "    " << bold_on << "--k=POSITIVE_INTEGER" << bold_off << endl;
-    cout << "        " << "Defaults to k=9. Indicates the size of the shingles used to calculate the simi-" << endl;
-    cout << "        " << "larity between the documents." << endl;
-    cout << endl;
-    cout << "    " << bold_on << "--m=POSITIVE_INTEGER" << bold_off << endl;
-    cout << "        " << "Defaults to m=1. Indicates the number of sketches saved in minhash modes." << endl;
-    cout << endl;
-    cout << "    " << bold_on << "--t=POSITIVE_INTEGER" << bold_off << endl;
-    cout << "        " << "Defaults to t=1. Indicates the number of hash functions used in minhash modes." << endl;
-    cout << endl;
-    cout << "    " << bold_on << "--seed=INTEGER" << bold_off << endl;
-    cout << "        " << "Defaults to a random value. Used by minhash modes in their random generator number." << endl;
-    cout << endl;
-    cout << "    " << bold_on << "-e" << bold_off << endl;
-    cout << "        " << "Output in experimentation format." << endl;
-    cout << endl;
-    exit(0);
 }

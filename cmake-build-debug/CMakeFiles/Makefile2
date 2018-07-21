@@ -66,7 +66,7 @@ CMAKE_BINARY_DIR = /cygdrive/c/Git/MinhashSketch/cmake-build-debug
 CMakeFiles/MinhashSketch.dir/all:
 	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/depend
 	$(MAKE) -f CMakeFiles/MinhashSketch.dir/build.make CMakeFiles/MinhashSketch.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5 "Built target MinhashSketch"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target MinhashSketch"
 .PHONY : CMakeFiles/MinhashSketch.dir/all
 
 # Include target in all.
@@ -76,7 +76,7 @@ all: CMakeFiles/MinhashSketch.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/MinhashSketch.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles 7
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/MinhashSketch.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /cygdrive/c/Git/MinhashSketch/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/MinhashSketch.dir/rule

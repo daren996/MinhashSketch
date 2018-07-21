@@ -82,25 +82,37 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/cygdrive/c/Git/MinhashSketch/Minhash.cpp">
+		<Unit filename="/cygdrive/c/Git/MinhashSketch/src/Hash.cpp">
 			<Option target="MinhashSketch"/>
 		</Unit>
-		<Unit filename="/cygdrive/c/Git/MinhashSketch/Minhash.h">
+		<Unit filename="/cygdrive/c/Git/MinhashSketch/src/Hash.h">
 			<Option target="MinhashSketch"/>
 		</Unit>
-		<Unit filename="/cygdrive/c/Git/MinhashSketch/SpookyV2.cpp">
+		<Unit filename="/cygdrive/c/Git/MinhashSketch/src/Help.cpp">
 			<Option target="MinhashSketch"/>
 		</Unit>
-		<Unit filename="/cygdrive/c/Git/MinhashSketch/SpookyV2.h">
+		<Unit filename="/cygdrive/c/Git/MinhashSketch/src/Help.h">
 			<Option target="MinhashSketch"/>
 		</Unit>
-		<Unit filename="/cygdrive/c/Git/MinhashSketch/Utils.cpp">
+		<Unit filename="/cygdrive/c/Git/MinhashSketch/src/Radix.cpp">
 			<Option target="MinhashSketch"/>
 		</Unit>
-		<Unit filename="/cygdrive/c/Git/MinhashSketch/Utils.h">
+		<Unit filename="/cygdrive/c/Git/MinhashSketch/src/Radix.h">
 			<Option target="MinhashSketch"/>
 		</Unit>
-		<Unit filename="/cygdrive/c/Git/MinhashSketch/main.cpp">
+		<Unit filename="/cygdrive/c/Git/MinhashSketch/src/SpookyV2.cpp">
+			<Option target="MinhashSketch"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Git/MinhashSketch/src/SpookyV2.h">
+			<Option target="MinhashSketch"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Git/MinhashSketch/src/Utils.cpp">
+			<Option target="MinhashSketch"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Git/MinhashSketch/src/Utils.h">
+			<Option target="MinhashSketch"/>
+		</Unit>
+		<Unit filename="/cygdrive/c/Git/MinhashSketch/src/main.cpp">
 			<Option target="MinhashSketch"/>
 		</Unit>
 		<Unit filename="/cygdrive/c/Git/MinhashSketch/CMakeLists.txt">

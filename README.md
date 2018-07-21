@@ -76,11 +76,11 @@ Firstly, I wrote a multi-thread radix sort program. I found that multi-thread pr
 
 ### Blocks
 
-We could use radix sort to get m scetches rather than heaps. Consequently, split sequence (all hash values) to **p** blocks and use **p** processors to handle these in parallel. 
+We could use radix sort to get m scetches rather than heaps. Consequently, split sequence (all hash values) to **p** blocks and use **p** processors to handle these in parallel. At last, we merge these results in parallel. 
 
 In order to simulate the situation where the GPU processes blocks in parallel, I first write it as a multi-thread program, treating each thread as a different processor, and they execute a same function to simulate SIMD.
 
-
+After debugging, I found that the results of the two algorithms are the same, and I manually verified several results, which are all correct.
 
 -------------------
 It is a project when I was internship at the University of Washington in St. Louis under the guidance of [Prof. Buhler](https://www.cse.wustl.edu/~jbuhler/).
