@@ -49,17 +49,8 @@ public:
 
 vector<Hash> generateHashes(int t, int seed);
 
-void insertValue(uint64 *value, signature &s, unordered_set<uint64> *filter,
-                 const vector<Hash> &hashes, vector<uint64> heap_max_v, int k);
-
-signature generateSignature(int k, int m, const string &file, const vector<Hash> &hashes);
-
 int computeSim(vector<uint64> v1, vector<uint64> v2);
 
 double computeSim(const signature &sig1, const signature &sig2);
-
-double computeSim(const string &file1, const string &file2, int k, int m, int t, int seed);
-
-bool cmp(int a, int b);
 
 #endif //MINHASHSKETCH_MINHASH_H

@@ -50,83 +50,6 @@ vector<Hash> generateHashes(int t, int seed) {
     return hashes;
 }
 
-void insertValue(uint64 *value, signature &sig, unordered_set<uint64> *filter,
-                 const vector<Hash> &hashes, vector<uint64> heap_max_v, int k) {
-//    for (int i = 0; i < k / 32 + 1; ++i) {
-//        cout << i << ":" << hex << value[i] << "  ";
-//    } cout << "\thash:" << hex << hashes[0](value, (k / 32 + 1) * 8) << endl;
-    bool existing = false;
-    for (int i = 0; i < k / 32 + 1; ++i) {
-        if (!filter[i].insert(value[i]).second) {
-            existing = true;
-        }
-    }
-    if (!existing) {
-        for (int h = 0; h < hashes.size(); ++h) {
-            uint64 p = hashes[h](value, (k / 32 + 1) * 8);
-            if (p < heap_max_v[h]) {
-                sig[h].push_back(p);
-                push_heap(sig[h].begin(), sig[h].end(), cmp);
-                pop_heap(sig[h].begin(), sig[h].end(), cmp);
-                sig[h].pop_back();
-            }
-        }
-    }
-}
-
-signature generateSignature(int k, int m, const string &sequence, const vector<Hash> &hashes) {
-    uint64 s_index = 0; // pointer of current base
-    uint64 cur_seq[k / 32 + 1]; // current sub-sequence
-    for (int i = 0; i < k / 32 + 1; ++i) {
-        cur_seq[i] = 0;
-    }
-    unordered_set<uint64> filter[k / 32 + 1];
-    signature sig(hashes.size(), vector<uint64>(m, UINT64_MAX ));
-    vector<uint64> heap_max_v(m, UINT64_MAX );
-    for (int h = 0; h < hashes.size(); ++h) {
-        make_heap(sig[h].begin(), sig[h].end(), cmp);
-    }
-    if (k < 32) {
-        for (; s_index < k; ++s_index) {
-            if (utils::base2int(sequence[s_index]) != -1)
-                cur_seq[0] = (cur_seq[0] << 2) % (uint64)pow(4, k) + utils::base2int(sequence[s_index]);
-            else
-                cerr << "ERROR:" << endl << "\t index: " << s_index << endl << "\t base: " << sequence[s_index]  << endl;
-        }
-        insertValue(cur_seq, sig, filter, hashes, heap_max_v, k);
-        for (; s_index < sequence.size(); ++s_index) {
-            if (utils::base2int(sequence[s_index]) != -1)
-                cur_seq[0] = (cur_seq[0] << 2) % (uint64)pow(4, k) + utils::base2int(sequence[s_index]);
-            else
-                cerr << "ERROR:" << endl << "\t index: " << s_index << endl << "\t base: " << sequence[s_index]  << endl;
-            insertValue(cur_seq, sig, filter, hashes, heap_max_v, k);
-        }
-    } else {
-        for (; s_index < k; ++s_index) {
-            if (utils::base2int(sequence[s_index]) != -1)
-                cur_seq[s_index / 32] = (cur_seq[s_index / 32] << 2) % UINT64_MAX + utils::base2int(sequence[s_index]);
-            else
-                cerr << "ERROR:" << endl << "\t index: " << s_index << endl << "\t base: " << sequence[s_index]  << endl;
-        }
-        insertValue(cur_seq, sig, filter, hashes, heap_max_v, k);
-        for (; s_index < sequence.size(); ++s_index) {
-            for (int i = 0; i < k / 32 - 1; ++i) {
-                cur_seq[i] = (cur_seq[i] << 2) + (cur_seq[i + 1] >> 62);
-            }
-            cur_seq[k / 32 - 1] = (cur_seq[k / 32 - 1] << 2) + (cur_seq[k / 32] >> ((k % 32) * 2 - 2));
-            if (utils::base2int(sequence[s_index]) != -1)
-                cur_seq[k / 32] = (cur_seq[k / 32] << 2) % (uint64)pow(4, k % 32) + utils::base2int(sequence[s_index]);
-            else
-                cerr << "ERROR:" << endl << "\t index: " << s_index << endl << "\t base: " << sequence[s_index]  << endl;
-            insertValue(cur_seq, sig, filter, hashes, heap_max_v, k);
-        }
-    }
-    for (int h = 0; h < sig.size(); ++h) {
-        sort_heap(sig[h].begin(), sig[h].end(), cmp);
-    }
-    return sig;
-}
-
 int computeSim(vector<uint64> v1, vector<uint64> v2) {
     int i = 0, j = 0, count = 0;
     while (i < v1.size() && j < v2.size()) {
@@ -150,14 +73,4 @@ double computeSim(const signature &sig1, const signature &sig2) {
     return double(j) / double(sig1.size() * sig1[0].size());
 }
 
-double computeSim(const string &sequence1, const string &sequence2, int k, int m, int t, int seed) {
-    vector<Hash> hashes = generateHashes(t, seed);
-    signature sig1 = generateSignature(k, m, sequence1, hashes);
-    signature sig2 = generateSignature(k, m, sequence2, hashes);
-    return computeSim(sig1, sig2);
-}
-
-bool cmp(int a, int b) {
-    return a < b;
-}
 
