@@ -1,4 +1,9 @@
 #include "Radix.h"
+// 只用array
+// merge的时候相邻merge
+// √ 可以用8个桶，桶的大小也不必是uint64
+// √ 提前检查重复的情况，这样就不必在merge的时候麻烦了
+// √ 不要用pow，用<<更快
 
 namespace rs {
 
@@ -33,9 +38,9 @@ namespace rs {
 
     signature genSig_multi(int k, int m, string &sequence, vector<Hash> &hashes) {
         int p = 5;
-
         signature sig(hashes.size(), vector<uint64>(m, UINT64_MAX));
 
+        // Compute the start and end index
         uint64 length = sequence.size();
         std::vector<uint64> record, start, end;
         for (int i = 0; i < (p - 1); ++i) {
@@ -67,29 +72,15 @@ namespace rs {
             int blocks = p;
             while (blocks > 1) {
                 std::vector<std::thread> tHolders;
-                if (blocks == p) {
-                    for (uint64 i = 0; i < (blocks / 2); i++) {
-                        if (blocks % 2 == 0) {
-                            std::thread t(rMerge, std::ref(list), start[i], end[i], start[i + blocks / 2],
-                                          end[i + blocks / 2], m);
-                            tHolders.push_back(std::move(t));
-                        } else {
-                            std::thread t(rMerge, std::ref(list), start[i], end[i], start[i + blocks / 2 + 1],
-                                          end[i + blocks / 2 + 1], m);
-                            tHolders.push_back(std::move(t));
-                        }
-                    }
-                } else {
-                    for (uint64 i = 0; i < (blocks / 2); i++) {
-                        if (blocks % 2 == 0) {
-                            std::thread t(rMerge, std::ref(list), start[i], start[i] + m - 1, start[i + blocks / 2],
-                                          start[i + blocks / 2] + m - 1, m);
-                            tHolders.push_back(std::move(t));
-                        } else {
-                            std::thread t(rMerge, std::ref(list), start[i], start[i] + m - 1, start[i + blocks / 2 + 1],
-                                          start[i + blocks / 2 + 1] + m - 1, m);
-                            tHolders.push_back(std::move(t));
-                        }
+                for (uint64 i = 0; i < (blocks / 2); i++) {
+                    if (blocks % 2 == 0) {
+                        std::thread t(rMerge, std::ref(list), start[i], start[i] + m - 1, start[i + blocks / 2],
+                                      start[i + blocks / 2] + m - 1, m);
+                        tHolders.push_back(std::move(t));
+                    } else {
+                        std::thread t(rMerge, std::ref(list), start[i], start[i] + m - 1, start[i + blocks / 2 + 1],
+                                      start[i + blocks / 2 + 1] + m - 1, m);
+                        tHolders.push_back(std::move(t));
                     }
                 }
                 for (uint64 i = 0; i < tHolders.size(); ++i) {
@@ -119,7 +110,7 @@ namespace rs {
         if (k < 32) {
             for (; s_index < k; ++s_index) {
                 if (utils::base2int(sequence[s_index + begin]) != -1)
-                    cur_seq[0] = (cur_seq[0] << 2) % (uint64) pow(4, k) + utils::base2int(sequence[s_index + begin]);
+                    cur_seq[0] = (cur_seq[0] << 2) % ((uint64)1 << (2*k)) + utils::base2int(sequence[s_index + begin]);
                 else
                     cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
                          << sequence[s_index + begin] << endl;
@@ -127,7 +118,7 @@ namespace rs {
             list.push_back(hash(cur_seq, (k / 32 + 1) * 8));
             for (; s_index < length; ++s_index) {
                 if (utils::base2int(sequence[s_index + begin]) != -1)
-                    cur_seq[0] = (cur_seq[0] << 2) % (uint64) pow(4, k) + utils::base2int(sequence[s_index + begin]);
+                    cur_seq[0] = (cur_seq[0] << 2) % ((uint64)1 << (2*k)) + utils::base2int(sequence[s_index + begin]);
                 else
                     cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
                          << sequence[s_index + begin] << endl;
@@ -149,7 +140,7 @@ namespace rs {
                 }
                 cur_seq[k / 32 - 1] = (cur_seq[k / 32 - 1] << 2) + (cur_seq[k / 32] >> ((k % 32) * 2 - 2));
                 if (utils::base2int(sequence[s_index + begin]) != -1)
-                    cur_seq[k / 32] = (cur_seq[k / 32] << 2) % (uint64) pow(4, k % 32) +
+                    cur_seq[k / 32] = (cur_seq[k / 32] << 2) % ((uint64)1 << (2 * (k % 32))) +
                                       utils::base2int(sequence[s_index + begin]);
                 else
                     cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
@@ -160,42 +151,35 @@ namespace rs {
 
         rSortLowestToHighest(list, start, list.size() - 1);
         List temp;
+        std::unordered_set<uint64> filter;
         for (int i = 0; i < m; ++i) {
-            temp.push_back(list[i]);
+            while (filter.insert(list[i + start]).second) {
+                temp.push_back(list[i + start]);
+            }
+        }
+        for (uint64 i = 0; i < m; ++i) {
+            list[i + start] = temp[i];
         }
         return temp;
     }
 
     uint64 rMerge(List &list, uint64 begin1, uint64 end1, uint64 begin2, uint64 end2, int m) {
         uint64 pointer1 = begin1, pointer2 = begin2, count = 0;
-        std::unordered_set<uint64> filter;
         std::queue<uint64> bucket;
         while (pointer1 <= end1 && pointer2 <= end2 && count < m) {
             if (list[pointer1] < list[pointer2]) {
                 bucket.push(list[pointer1]);
                 count += 1;
                 pointer1 += 1;
-                while (!filter.insert(list[pointer1]).second && pointer1 <= end1) {
-                    pointer1 += 1;
-                }
             } else if (list[pointer1] > list[pointer2]) {
                 bucket.push(list[pointer2]);
                 count += 1;
                 pointer2 += 1;
-                while (!filter.insert(list[pointer2]).second && pointer2 <= end2) {
-                    pointer2 += 1;
-                }
             } else if (list[pointer1] == list[pointer2]) {
                 bucket.push(list[pointer1]);
                 count += 1;
                 pointer1 += 1;
                 pointer2 += 1;
-                while (!filter.insert(list[pointer1]).second && pointer1 <= end1) {
-                    pointer1 += 1;
-                }
-                while (!filter.insert(list[pointer2]).second && pointer2 <= end2) {
-                    pointer2 += 1;
-                }
             }
         }
         for (uint64 i = 0; i < count; i++) {
@@ -206,33 +190,25 @@ namespace rs {
     }
 
     void rSortLowestToHighest(List &list, uint64 begin, uint64 end) {
-        // Return if list is empty or contains only one element.
         if (begin >= end) { return; }
-
+        uint64 length = end - begin + 1;
         uint64 digits_max = 64;
-
-        // Initialize buckets.
-        std::vector<std::queue<uint64> > temp;
-        for (int i = 0; i <= 1; ++i) {
-            temp.push_back(std::queue<uint64>());
-        }
-        std::vector<std::queue<uint64> > buckets[digits_max];
-        for (int i = 0; i < digits_max; ++i) {
-            buckets[i] = temp;
-        }
-
-        // Sorting starts here.
-        for (uint64 i = 0; i < digits_max; ++i) {
+        for (uint64 i = 0; i < digits_max; i+=3) {
+            uint64 bucket[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
             for (uint64 j = begin; j <= end; ++j) {
-                uint64 curDigit = (list[j] & ((uint64) 0x0001 << i)) >> i;
-                buckets[i][curDigit].push(list[j]);
+                uint64 curDigit = list[j] >> i & 7;
+                bucket[curDigit + 1]++;
             }
-            for (uint64 j = begin, c = 0; c <= 1; ++c) {
-                while (!buckets[i][c].empty()) {
-                    list[j] = buckets[i][c].front();
-                    buckets[i][c].pop();
-                    ++j;
-                }
+            for (int j = 1; j < 9; j++) {
+                bucket[j] += bucket[j - 1];
+            }
+            List tempL(length);
+            for (uint64 j = begin; j <= end; ++j) {
+                uint64 curDigit = list[j] >> i & 7;
+                tempL[bucket[curDigit]++] = list[j];
+            }
+            for (uint64 j = 0; j < length; ++j) {
+                list[j + begin] = tempL[j];
             }
         }
     }
