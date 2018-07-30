@@ -165,26 +165,22 @@ namespace rs {
 
     uint64 rMerge(List &list, uint64 begin1, uint64 end1, uint64 begin2, uint64 end2, int m) {
         uint64 pointer1 = begin1, pointer2 = begin2, count = 0;
-        std::queue<uint64> bucket;
+        uint64 *bucket = (uint64*) malloc(m * sizeof(uint64));
         while (pointer1 <= end1 && pointer2 <= end2 && count < m) {
             if (list[pointer1] < list[pointer2]) {
-                bucket.push(list[pointer1]);
-                count += 1;
+                bucket[count++] = list[pointer1];
                 pointer1 += 1;
             } else if (list[pointer1] > list[pointer2]) {
-                bucket.push(list[pointer2]);
-                count += 1;
+                bucket[count++] = list[pointer2];
                 pointer2 += 1;
             } else if (list[pointer1] == list[pointer2]) {
-                bucket.push(list[pointer1]);
-                count += 1;
+                bucket[count++] = list[pointer1];
                 pointer1 += 1;
                 pointer2 += 1;
             }
         }
         for (uint64 i = 0; i < count; i++) {
-            list[i + begin1] = bucket.front();
-            bucket.pop();
+            list[i + begin1] = bucket[i];
         }
         return count;
     }

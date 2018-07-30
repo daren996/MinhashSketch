@@ -14,6 +14,64 @@ using namespace std;
 
 void output_signature(vector<vector<uint64>> sig1);
 
+void getList(int k, uint64 *list[], string &sequence, vector<Hash> &hashes) {
+    for (int j = 0; j < hashes.size(); j++) {
+        uint64 begin = 0, end = sequence.size() - k + 1;
+        uint64 length = end - begin + 1;
+        uint64 s_index = 0; // pointer of current base
+        uint64 l_index = 0; // pointer of current list
+        uint64 cur_seq[k / 32 + 1]; // current sub-sequence
+        for (int i = 0; i < k / 32 + 1; ++i) {
+            cur_seq[i] = 0;
+        }
+
+        // Get original list
+        if (k < 32) {
+            for (; s_index < k; ++s_index) {
+                if (utils::base2int(sequence[s_index + begin]) != -1)
+                    cur_seq[0] =
+                            (cur_seq[0] << 2) % ((uint64) 1 << (2 * k)) + utils::base2int(sequence[s_index + begin]);
+                else
+                    cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
+                         << sequence[s_index + begin] << endl;
+            }
+            list[j][l_index++] = hashes[j](cur_seq, (k / 32 + 1) * 8);
+            for (; s_index < length; ++s_index) {
+                if (utils::base2int(sequence[s_index + begin]) != -1)
+                    cur_seq[0] =
+                            (cur_seq[0] << 2) % ((uint64) 1 << (2 * k)) + utils::base2int(sequence[s_index + begin]);
+                else
+                    cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
+                         << sequence[s_index + begin] << endl;
+                list[j][l_index++] = hashes[j](cur_seq, (k / 32 + 1) * 8);
+            }
+        } else {
+            for (; s_index < k; ++s_index) {
+                if (utils::base2int(sequence[s_index + begin]) != -1)
+                    cur_seq[s_index / 32] =
+                            (cur_seq[s_index / 32] << 2) % UINT64_MAX + utils::base2int(sequence[s_index + begin]);
+                else
+                    cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
+                         << sequence[s_index + begin] << endl;
+            }
+            list[j][l_index++] = hashes[j](cur_seq, (k / 32 + 1) * 8);
+            for (; s_index < length; ++s_index) {
+                for (int i = 0; i < k / 32 - 1; ++i) {
+                    cur_seq[i] = (cur_seq[i] << 2) + (cur_seq[i + 1] >> 62);
+                }
+                cur_seq[k / 32 - 1] = (cur_seq[k / 32 - 1] << 2) + (cur_seq[k / 32] >> ((k % 32) * 2 - 2));
+                if (utils::base2int(sequence[s_index + begin]) != -1)
+                    cur_seq[k / 32] = (cur_seq[k / 32] << 2) % ((uint64) 1 << (2 * (k % 32))) +
+                                      utils::base2int(sequence[s_index + begin]);
+                else
+                    cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
+                         << sequence[s_index + begin] << endl;
+                list[j][l_index] = hashes[j](cur_seq, (k / 32 + 1) * 8);
+            }
+        }
+    }
+}
+
 // MinhashSketch.exe ../testing_files/sequence_clip1.fasta ../testing_files/sequence_clip2.fasta all -e --k=5 --m=10 --t=10
 int main(int argc, char *argv[]) {
 
@@ -94,6 +152,23 @@ int main(int argc, char *argv[]) {
     double similarity, time;
     list<tuple<string, double, double>> results;
     vector<Hash> hashes = generateHashes(t, seed);
+
+    // GET HASH VALUES LIST
+    uint64 *list1[t];
+    uint64 *list2[t];
+    for (int i = 0; i < t; i++) {
+        list1[i] = (uint64 *) malloc(sizeof(uint64) * (sequence1.size() - k + 1));
+        list2[i] = (uint64 *) malloc(sizeof(uint64) * (sequence2.size() - k + 1));
+        for (int j = 0; j < sequence1.size() - k + 1; j++) {
+            list1[i][j] = UINT64_MAX;
+        }
+        for (int j = 0; j < sequence2.size() - k + 1; j++) {
+            list2[i][j] = UINT64_MAX;
+        }
+    }
+    getList(k, list1, sequence1, hashes);
+    getList(k, list2, sequence2, hashes);
+
     if (cal_name == "all" || cal_name == "minhash_regular") {
         if (t < 1) {
             cerr << endl;
