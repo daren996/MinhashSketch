@@ -84,6 +84,31 @@ In order to simulate the situation where the GPU processes blocks in parallel, I
 
 After debugging, I found that the results of the two algorithms are the same, and I manually verified several results, which are all correct.
 
+## Improvements (July 25)
+After talking with Prof. Buhler, I got several tips about the implement. 
+
+1. Use Count-Scan-Reorder process to do radix sort and check 8 bits at a time (i.e. using 2^8 buckets). 
+2. Check for duplicates in advance in the end of sort process so that don't have to worry about it in the merge process. 
+3. Merging adjacent blocks, which will make program more efficient. 
+4. Use << instead of pow.  
+
+## Implemented on the GPU
+
+### Process Description
+
+#### Divide DNA sequence into several chunks
+
+We pre-defined parameters BLOCKS\_NUM, BLOCK\_THREADS and ITEMS\_PER\_THREAD. Then we can process BLOCKS\_NUM * BLOCK\_THREADS * ITEMS\_PER\_THREAD values at a time, which is also the length of a chunk.
+
+If the length of a chunk is (BLOCKS\_NUM * BLOCK\_THREADS * ITEMS\_PER\_THREAD), the length of a sebsequence of DNA is (BLOCKS\_NUM * BLOCK\_THREADS * ITEMS\_PER\_THREAD + k - 1). And the number of chunks is 
+
+	if (length % (BLOCKS_NUM * BLOCK_THREADS * ITEMS_PER_THREAD) == 0)
+        CHUNKS_NUM = (length - k + 1) / (BLOCKS_NUM * BLOCK_THREADS * ITEMS_PER_THREAD);
+    else
+        CHUNKS_NUM = (length - k + 1) / (BLOCKS_NUM * BLOCK_THREADS * ITEMS_PER_THREAD) + 1;
+
+
+
 -------------------
 It is a project when I was internship at the University of Washington in St. Louis under the guidance of [Prof. Buhler](https://www.cse.wustl.edu/~jbuhler/).
 

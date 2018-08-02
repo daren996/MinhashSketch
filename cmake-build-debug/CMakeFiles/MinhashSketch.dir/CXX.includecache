@@ -101,6 +101,8 @@ vector
 -
 string
 -
+cstring
+-
 Radix.h
 /cygdrive/c/Git/MinhashSketch/src/Radix.h
 Help.h

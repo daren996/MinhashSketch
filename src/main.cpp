@@ -6,6 +6,7 @@
 #include <random>
 #include <vector>
 #include <string>
+#include <cstring>
 
 #include "Radix.h"
 #include "Help.h"
@@ -145,6 +146,10 @@ int main(int argc, char *argv[]) {
     }
     file1.close();
     file2.close();
+//    char dnaList1[sequence1.size()];
+//    strcpy(dnaList1, sequence1.c_str());
+//    char dnaList2[sequence2.size()];
+//    strcpy(dnaList2, sequence2.c_str());
 
     // MAIN PROGRESS
     clock_t ini_time;
@@ -154,7 +159,7 @@ int main(int argc, char *argv[]) {
     vector<Hash> hashes = generateHashes(t, seed);
 
     // GET HASH VALUES LIST
-    uint64 *list1[t];
+    /*uint64 *list1[t];
     uint64 *list2[t];
     for (int i = 0; i < t; i++) {
         list1[i] = (uint64 *) malloc(sizeof(uint64) * (sequence1.size() - k + 1));
@@ -167,7 +172,7 @@ int main(int argc, char *argv[]) {
         }
     }
     getList(k, list1, sequence1, hashes);
-    getList(k, list2, sequence2, hashes);
+    getList(k, list2, sequence2, hashes);*/
 
     if (cal_name == "all" || cal_name == "minhash_regular") {
         if (t < 1) {
