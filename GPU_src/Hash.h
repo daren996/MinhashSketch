@@ -45,6 +45,8 @@ public:
     uint64 operator()(uint64 x) const;
 
     uint64 operator()(uint64 *x, int k) const;
+
+    __device__ uint64 getValue_d(uint64 *x);
 };
 
 vector<Hash> generateHashes(int t, int seed);

@@ -35,8 +35,14 @@ long long int Hash::generateNextPrime(long long int n) {
 uint64 Hash::operator()(uint64 x) const {
     return (a * x + b) % p;
 }
+
 uint64 Hash::operator()(uint64 *x, int k) const {
     return SpookyHash::Hash64(x, k, b); // k is length of sequences in bytes
+}
+
+__device__
+uint64 Hash::getValue_d(uint64 *x) {
+    return (a * x[0] + b) % p;
 }
 
 
