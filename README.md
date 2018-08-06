@@ -107,6 +107,12 @@ If the length of a chunk is (BLOCKS\_NUM * BLOCK\_THREADS * ITEMS\_PER\_THREAD),
     else
         CHUNKS_NUM = (length - k + 1) / (BLOCKS_NUM * BLOCK_THREADS * ITEMS_PER_THREAD) + 1;
 
+### Steps
+
+In general, the process divides the long DNA into sevelral CHUNKs and cope with them sequentially. For each CHUNK, it will get hash velues, radix sort, mark, scan in GPU. But the merge process is still on the CPU currenty.
+
+<p>
+<img src="./git_picture/Steps1.png" width="400" align=center />
 
 
 -------------------
