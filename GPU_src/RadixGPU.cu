@@ -9,6 +9,7 @@
 #include <unordered_set>
 #include <cuda_runtime.h>
 #include "Hash.h"
+#include "SpookyV2_d.h"
 #include <cub/cub.cuh>
 
 using namespace std;
@@ -19,9 +20,89 @@ using namespace std;
 #define CEILING_DIVIDE(X, Y) (1 + (((X) - 1) / (Y)))
 #define CHECK(res) if(res!=cudaSuccess){printf("CHECK ERROR!\n");exit(-1);}
 
+__device__
+int base2int(char base) {
+    switch (base) {
+        case 'A':
+            return 0;
+        case 'C':
+            return 1;
+        case 'G':
+            return 2;
+        case 'T':
+            return 3;
+        default:
+            return -1;
+    }
+}
+
+__device__ uint64 getHashValue (uint64 *x, uint64 b, int k) {
+    return SpookyHash_d::Hash64(x, (k / 32 + 1) * 8, b); // k is length of sequences in bytes
+}
 
 template<int BLOCK_THREADS, int ITEMS_PER_THREAD>
-__global__ void rSort(int m, uint64 *d_in, uint64 *d_out) {
+__global__ void getList(const int k, char *dna_d, uint64 *input_d,
+                        int numElem_dna, int numElem_list, uint64 hash_b) {
+    int tx = threadIdx.x;
+    int bx = blockIdx.x;
+    int index = (BLOCK_THREADS * bx + tx) * ITEMS_PER_THREAD;
+    if (index + k < numElem_dna) {
+        int list_index = index;
+        int dna_index = index;
+        bool isEnd = 0;
+        uint64 *cur_seq = new uint64[k / 32 + 1]; // current sub-sequence
+        for (int i = 0; i < k / 32 + 1; ++i)
+            cur_seq[i] = 0;
+        if (k < 32) {
+            for (; dna_index < index + k - 1; ++dna_index) {
+                if (dna_d[dna_index] == 'S')
+                    isEnd = 1;
+                if (base2int(dna_d[dna_index]) != -1)
+                    cur_seq[0] = (cur_seq[0] << 2) % ((uint64) 1 << (2 * k)) + base2int(dna_d[dna_index]);
+            }
+            for (; dna_index < index + ITEMS_PER_THREAD + k - 1; ++dna_index) {
+                if (dna_d[dna_index] == 'S')
+                    isEnd = 1;
+                if (base2int(dna_d[dna_index]) != -1)
+                    cur_seq[0] = (cur_seq[0] << 2) % ((uint64) 1 << (2 * k)) + base2int(dna_d[dna_index]);
+                if (isEnd)
+                    input_d[list_index++] = UINT64_MAX;
+                else
+                    input_d[list_index++] = getHashValue(cur_seq, hash_b, k);
+            }
+        } else {
+            for (; dna_index < index + k; ++dna_index) {
+                if (dna_d[dna_index] == 'S')
+                    isEnd = 1;
+                if (base2int(dna_d[dna_index]) != -1)
+                    cur_seq[dna_index / 32] =
+                            (cur_seq[dna_index / 32] << 2) % UINT64_MAX + base2int(dna_d[dna_index]);
+            }
+            if (isEnd)
+                input_d[list_index++] = UINT64_MAX;
+            else
+                input_d[list_index++] = getHashValue(cur_seq, hash_b, k);
+            for (; dna_index < index + ITEMS_PER_THREAD + k - 1; ++dna_index) {
+                for (int j = 0; j < k / 32 - 1; ++j) {
+                    cur_seq[j] = (cur_seq[j] << 2) + (cur_seq[j + 1] >> 62);
+                }
+                cur_seq[k / 32 - 1] = (cur_seq[k / 32 - 1] << 2) + (cur_seq[k / 32] >> ((k % 32) * 2 - 2));
+                if (dna_d[dna_index] == 'S')
+                    isEnd = 1;
+                if (base2int(dna_d[dna_index]) != -1)
+                    cur_seq[k / 32] = (cur_seq[k / 32] << 2) % ((uint64) 1 << (2 * (k % 32))) +
+                                      base2int(dna_d[dna_index]);
+                if (isEnd)
+                    input_d[list_index++] = UINT64_MAX;
+                else
+                    input_d[list_index++] = getHashValue(cur_seq, hash_b, k);
+            }
+        }
+    }
+}
+
+template<int BLOCK_THREADS, int ITEMS_PER_THREAD>
+__global__ void rSort(uint64 *d_in) {
     // Specialize BlockLoad, BlockStore, and BlockRadixSort collective types
     typedef cub::BlockLoad<
             uint64, BLOCK_THREADS, ITEMS_PER_THREAD, cub::BLOCK_LOAD_TRANSPOSE> BlockLoadT;
@@ -45,95 +126,82 @@ __global__ void rSort(int m, uint64 *d_in, uint64 *d_out) {
     __syncthreads();    // Barrier for smem reuse
     // Store the sorted segment
     BlockStoreT(temp_storage.store).Store(d_in + block_offset, thread_keys);
-    for (int i = 0; i < m; i++)
-        d_out[i] = d_in[i];
-}
-
-__device__
-int base2int(char base) {
-    switch (base) {
-        case 'A':
-            return 0;
-        case 'C':
-            return 1;
-        case 'G':
-            return 2;
-        case 'T':
-            return 3;
-        default:
-            return -1;
-    }
 }
 
 template<int BLOCK_THREADS, int ITEMS_PER_THREAD>
-__global__ void getList(const int k, char *dna_d, uint64 *input_d,
-                        int numElem_dna, int numElem_list, Hash &hash) {
+__global__ void getDupe (uint64 *input_d, int *dupe_d, int numElem_list) {
     int tx = threadIdx.x;
     int bx = blockIdx.x;
-    int index = BLOCK_THREADS * bx + tx;
-    if (index * ITEMS_PER_THREAD + k < numElem_dna) {
-        int list_index = index * ITEMS_PER_THREAD;
-        int dna_index = index * ITEMS_PER_THREAD;
-        bool isEnd = 0;
-        uint64 *cur_seq = new uint64[k / 32 + 1]; // current sub-sequence
-        for (int i = 0; i < k / 32 + 1; ++i)
-            cur_seq[i] = 0;
-        if (k < 32) {
-            for (; dna_index < index * ITEMS_PER_THREAD + k - 1; ++dna_index) {
-                if (dna_d[dna_index] == 'S')
-                    isEnd = 1;
-                if (base2int(dna_d[dna_index]) != -1)
-                    cur_seq[0] = (cur_seq[0] << 2) % ((uint64) 1 << (2 * k)) + base2int(dna_d[dna_index]);
-            }
-            for (; dna_index < index * ITEMS_PER_THREAD + ITEMS_PER_THREAD + k - 1; ++dna_index) {
-                if (dna_d[dna_index] == 'S')
-                    isEnd = 1;
-                if (base2int(dna_d[dna_index]) != -1)
-                    cur_seq[0] = (cur_seq[0] << 2) % ((uint64) 1 << (2 * k)) + base2int(dna_d[dna_index]);
-                if (isEnd)
-                    input_d[list_index++] = UINT64_MAX;
-                else
-                    input_d[list_index++] = cur_seq[0];//hash.getValue_d(cur_seq);
-            }
-        } else {
-            for (; dna_index < index * ITEMS_PER_THREAD + k; ++dna_index) {
-                if (dna_d[dna_index] == 'S')
-                    isEnd = 1;
-                if (base2int(dna_d[dna_index]) != -1)
-                    cur_seq[dna_index / 32] =
-                            (cur_seq[dna_index / 32] << 2) % UINT64_MAX + base2int(dna_d[dna_index]);
-            }
-            if (isEnd)
-                input_d[list_index++] = UINT64_MAX;
-            else
-                input_d[list_index++] = hash.getValue_d(cur_seq);
-            for (; dna_index < index * ITEMS_PER_THREAD + ITEMS_PER_THREAD + k - 1; ++dna_index) {
-                for (int j = 0; j < k / 32 - 1; ++j) {
-                    cur_seq[j] = (cur_seq[j] << 2) + (cur_seq[j + 1] >> 62);
-                }
-                cur_seq[k / 32 - 1] = (cur_seq[k / 32 - 1] << 2) + (cur_seq[k / 32] >> ((k % 32) * 2 - 2));
-                if (dna_d[dna_index] == 'S')
-                    isEnd = 1;
-                if (base2int(dna_d[dna_index]) != -1)
-                    cur_seq[k / 32] = (cur_seq[k / 32] << 2) % ((uint64) 1 << (2 * (k % 32))) +
-                                      base2int(dna_d[dna_index]);
-                if (isEnd)
-                    input_d[list_index++] = UINT64_MAX;
-                else
-                    input_d[list_index++] = hash.getValue_d(cur_seq);
-            }
+    int index = (BLOCK_THREADS * bx + tx) * ITEMS_PER_THREAD;
+    if (index < numElem_list) {
+        for (int i = 0; i < ITEMS_PER_THREAD; i++) {
+            dupe_d[index + i] = 1;
+            if (index != 0 && input_d[index + i] == input_d[index + i - 1])
+                dupe_d[index + i] = 0;
         }
     }
 }
 
-signature genSig(const int k, const int m, char *dnaList, int length, vector <Hash> &hashes) {
+template<int BLOCK_THREADS, int ITEMS_PER_THREAD>
+__global__ void getScan (int *scan_d, int *dupe_d, int numElem_list) {
+    typedef cub::BlockLoad<
+            int, BLOCK_THREADS, ITEMS_PER_THREAD, cub::BLOCK_LOAD_TRANSPOSE> BlockLoadT;
+    typedef cub::BlockStore<
+            int, BLOCK_THREADS, ITEMS_PER_THREAD, cub::BLOCK_STORE_TRANSPOSE> BlockStoreT;
+    typedef cub::BlockScan<int, BLOCK_THREADS> BlockScanT;
+    __shared__ union {
+        typename BlockLoadT::TempStorage load;
+        typename BlockStoreT::TempStorage store;
+        typename BlockScanT::TempStorage scan;
+    } temp_storage;
+    int thread_data[4];
+    int block_offset = blockIdx.x * (BLOCK_THREADS * ITEMS_PER_THREAD);
+    BlockLoadT(temp_storage.load).Load(dupe_d + block_offset, thread_data);
+    __syncthreads();
+    BlockScanT(temp_storage.scan).ExclusiveSum(thread_data, thread_data);
+    __syncthreads();
+    BlockStoreT(temp_storage.store).Store(scan_d + block_offset, thread_data);
+}
+
+template<int BLOCK_THREADS, int ITEMS_PER_THREAD>
+__global__ void getSketch (const int m, uint64 *input_d, int *scan_d, int *dupe_d,
+                           uint64 *sketch_d, int numElem_list) {
+    int tx = threadIdx.x;
+    int bx = blockIdx.x;
+    int index = (BLOCK_THREADS * bx + tx) * ITEMS_PER_THREAD;
+    if (index < numElem_list) {
+        int offset = scan_d[index];
+        for (int i = 0; i < ITEMS_PER_THREAD; i++)
+            if (dupe_d[index + i] == 1 && offset < m)
+                sketch_d[offset++] = input_d[index + i];
+    }
+}
+
+void rMerge(const int m, uint64 *sketch_h, uint64 *output_h) {
+    int pointer1 = 0, pointer2 = 0, count = 0;
+    uint64 bucket[m];
+    while (count < m) {
+        if (sketch_h[pointer1] < output_h[pointer2]) {
+            bucket[count++] = sketch_h[pointer1++];
+        } else if (sketch_h[pointer1] > output_h[pointer2]) {
+            bucket[count++] = output_h[pointer2++];
+        } else if (sketch_h[pointer1] == output_h[pointer2]) {
+            bucket[count++] = sketch_h[pointer1++];
+            pointer2 ++;
+        }
+    }
+    for (uint64 i = 0; i < m; i++)
+        output_h[i] = bucket[i];
+}
+
+signature genSig(const int k, const int m, const int t, char *dnaList, int length, uint64 *hashes_b) {
 
     const int BLOCKS_NUM = 5;
     const int BLOCK_THREADS = 16;// 128;
     const int ITEMS_PER_THREAD = 4;
 
     // Compute CHUNKS_NUM and the start, end and record index.
-    signature sig(hashes.size(), vector<uint64>(m, UINT64_MAX));
+    signature sig(t, vector<uint64>(m, UINT64_MAX));
     int CHUNKS_NUM;
     if (length % (BLOCKS_NUM * BLOCK_THREADS * ITEMS_PER_THREAD) == 0)
         CHUNKS_NUM = (length - k + 1) / (BLOCKS_NUM * BLOCK_THREADS * ITEMS_PER_THREAD);
@@ -165,18 +233,27 @@ signature genSig(const int k, const int m, char *dnaList, int length, vector <Ha
     int numElem_list = BLOCKS_NUM * BLOCK_THREADS * ITEMS_PER_THREAD;
     char *dna_h = (char *) malloc(sizeof(char) * numElem_dna);
     uint64 * output_h = (uint64 *) malloc(sizeof(uint64) * m);
+    uint64 * sketch_h = (uint64 *) malloc(sizeof(uint64) * m);
     char *dna_d;
-    uint64 * input_d, *output_d;
+    uint64 * input_d, *output_d, *sketch_d;
+    int *dupe_d;
+    int *scan_d;
     res = cudaMalloc(&dna_d, sizeof(char) * numElem_dna);
     CHECK(res);
     res = cudaMalloc(&input_d, sizeof(uint64) * numElem_list);
     CHECK(res);
+    res = cudaMalloc(&dupe_d, sizeof(int) * numElem_list);
+    CHECK(res);
+    res = cudaMalloc(&scan_d, sizeof(int) * numElem_list);
+    CHECK(res);
     res = cudaMalloc(&output_d, sizeof(uint64) * m);
+    CHECK(res);
+    res = cudaMalloc(&sketch_d, sizeof(uint64) * m);
     CHECK(res);
     for (int i = 0; i < m; i++)
         output_h[i] = UINT64_MAX;
 
-    for (int j = 0; j < hashes.size(); j++) {
+    for (int j = 0; j < t; j++) {
         for (int p = 0; p < CHUNKS_NUM; p++) {
             for (int i = 0; i < numElem_dna; i++) {
                 if (i < record[p])
@@ -186,16 +263,25 @@ signature genSig(const int k, const int m, char *dnaList, int length, vector <Ha
             }
             res = cudaMemcpy((void *) (dna_d), (void *) (dna_h), numElem_dna * sizeof(char), cudaMemcpyHostToDevice);
             CHECK(res);
-            res = cudaMemcpy((void *) (output_d), (void *) (output_h), m * sizeof(uint64), cudaMemcpyHostToDevice);
-            CHECK(res);
+//            res = cudaMemcpy((void *) (output_d), (void *) (output_h), m * sizeof(uint64), cudaMemcpyHostToDevice);
+//            CHECK(res);
 
             getList<BLOCK_THREADS, ITEMS_PER_THREAD> << < BLOCKS_NUM, BLOCK_THREADS >> >
-                    (k, dna_d, input_d, numElem_dna, numElem_list, hashes[j]);
+                    (k, dna_d, input_d, numElem_dna, numElem_list, hashes_b[j]);
+            rSort<BLOCK_THREADS, ITEMS_PER_THREAD>  << < BLOCKS_NUM, BLOCK_THREADS >> >
+                    (input_d);
+            getDupe <BLOCK_THREADS, ITEMS_PER_THREAD> << < BLOCKS_NUM, BLOCK_THREADS >> >
+                    (input_d, dupe_d, numElem_list);
+            getScan <BLOCK_THREADS, ITEMS_PER_THREAD> << < BLOCKS_NUM, BLOCK_THREADS >> >
+                    (scan_d, dupe_d, numElem_list);
+            getSketch <BLOCK_THREADS, ITEMS_PER_THREAD> << < BLOCKS_NUM, BLOCK_THREADS >> >
+                    (m, input_d, scan_d, dupe_d, sketch_d, numElem_list);
 
-            rSort<BLOCK_THREADS, ITEMS_PER_THREAD>  << < BLOCKS_NUM, BLOCK_THREADS >> > (m, input_d, output_d);
-
-            res = cudaMemcpy((void *) (output_h), (void *) (output_d), m * sizeof(uint64), cudaMemcpyDeviceToHost);
+            res = cudaMemcpy((void *) (sketch_h), (void *) (sketch_d), m * sizeof(uint64), cudaMemcpyDeviceToHost);
             CHECK(res);
+            rMerge(m, sketch_h, output_h);
+//            res = cudaMemcpy((void *) (output_h), (void *) (sketch_d), m * sizeof(uint64), cudaMemcpyDeviceToHost);
+//            CHECK(res);
         }
         for (int i = 0; i < m; i++) {
             sig[j][i] = output_h[i];
@@ -341,5 +427,7 @@ signature genSig_list(int m, uint64 *list[], uint64 length, vector <Hash> &hashe
     return sig;
 
 }
+
+
 
 

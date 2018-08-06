@@ -89,6 +89,7 @@ void help() {
     exit(0);
 }
 
+/*
 void getList(int k, uint64 *list[], string &sequence, vector <Hash> &hashes) {
     for (int j = 0; j < hashes.size(); j++) {
         uint64 begin = 0, end = sequence.size() - k + 1;
@@ -110,7 +111,7 @@ void getList(int k, uint64 *list[], string &sequence, vector <Hash> &hashes) {
                     cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
                          << sequence[s_index + begin] << endl;
             }
-            list[j][l_index++] = hashes[j](cur_seq, (k / 32 + 1) * 8);
+            list[j][l_index++] = hashes[j](cur_seq);
             for (; s_index < length; ++s_index) {
                 if (utils::base2int(sequence[s_index + begin]) != -1)
                     cur_seq[0] =
@@ -118,7 +119,7 @@ void getList(int k, uint64 *list[], string &sequence, vector <Hash> &hashes) {
                 else
                     cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
                          << sequence[s_index + begin] << endl;
-                list[j][l_index++] = hashes[j](cur_seq, (k / 32 + 1) * 8);
+                list[j][l_index++] = hashes[j](cur_seq);
             }
         } else {
             for (; s_index < k; ++s_index) {
@@ -129,7 +130,7 @@ void getList(int k, uint64 *list[], string &sequence, vector <Hash> &hashes) {
                     cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
                          << sequence[s_index + begin] << endl;
             }
-            list[j][l_index++] = hashes[j](cur_seq, (k / 32 + 1) * 8);
+            list[j][l_index++] = hashes[j](cur_seq);
             for (; s_index < length; ++s_index) {
                 for (int i = 0; i < k / 32 - 1; ++i) {
                     cur_seq[i] = (cur_seq[i] << 2) + (cur_seq[i + 1] >> 62);
@@ -141,11 +142,12 @@ void getList(int k, uint64 *list[], string &sequence, vector <Hash> &hashes) {
                 else
                     cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
                          << sequence[s_index + begin] << endl;
-                list[j][l_index] = hashes[j](cur_seq, (k / 32 + 1) * 8);
+                list[j][l_index] = hashes[j](cur_seq);
             }
         }
     }
 }
+*/
 
 // MinhashSketch.exe ../testing_files/sequence_clip1.fasta ../testing_files/sequence_clip2.fasta all -e --k=5 --m=10 --t=10
 int main(int argc, char *argv[]) {
@@ -231,7 +233,11 @@ int main(int argc, char *argv[]) {
     bool mode_found = false;
     double similarity, time;
     list <tuple<string, double, double>> results;
-    vector <Hash> hashes = generateHashes(t, seed);
+//    vector <Hash> hashes = generateHashes(t, seed);
+    uint64 *hashes_b = generateHashes_b(t, seed);
+//    for (int i = 0; i < t; i++) {
+//        cout << "hashes_b[i]: " << hashes_b[i] << endl;
+//    }
 
     // GET HASH VALUES LIST
     /*uint64 *list1[t];
@@ -258,8 +264,8 @@ int main(int argc, char *argv[]) {
         mode_found = true;
         ini_time = clock();
         // vector<Hash> hashes = generateHashes(t, seed);
-        vector <vector<uint64>> sig1 = genSig(k, m, dnaList1, sequence1.size(), hashes);
-        vector <vector<uint64>> sig2 = genSig(k, m, dnaList2, sequence2.size(), hashes);
+        vector <vector<uint64>> sig1 = genSig(k, m, t, dnaList1, sequence1.size(), hashes_b);
+        vector <vector<uint64>> sig2 = genSig(k, m, t, dnaList2, sequence2.size(), hashes_b);
         cout << "sig1:  size:" << sig1[0].size() << endl;
         output_signature(sig1);
         cout << "\nsig2:  size:" << sig2[0].size() << endl;
