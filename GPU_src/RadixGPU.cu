@@ -17,7 +17,7 @@ using namespace std;
 //#define BLOCKS_NUM 5
 //#define BLOCK_THREADS 16// 128
 //#define ITEMS_PER_THREAD 4
-#define CEILING_DIVIDE(X, Y) (1 + (((X) - 1) / (Y)))
+//#define CEILING_DIVIDE(X, Y) (1 + (((X) - 1) / (Y)))
 #define CHECK(res) if(res!=cudaSuccess){printf("CHECK ERROR!\n");exit(-1);}
 
 __device__
@@ -37,9 +37,10 @@ int base2int(char base) {
 }
 
 __device__ uint64 getHashValue (uint64 *x, uint64 b, int k) {
-    return SpookyHash_d::Hash64(x, (k / 32 + 1) * 8, b); // k is length of sequences in bytes
+    return SpookyHash_d::Hash64(x, (k / 32 + 1) * 8, b);
 }
 
+// Transfer DNA Sequence into Hash Value List.
 template<int BLOCK_THREADS, int ITEMS_PER_THREAD>
 __global__ void getList(const int k, char *dna_d, uint64 *input_d,
                         int numElem_dna, int numElem_list, uint64 hash_b) {
@@ -101,6 +102,7 @@ __global__ void getList(const int k, char *dna_d, uint64 *input_d,
     }
 }
 
+// Radix Sort.
 template<int BLOCK_THREADS, int ITEMS_PER_THREAD>
 __global__ void rSort(uint64 *d_in) {
     // Specialize BlockLoad, BlockStore, and BlockRadixSort collective types
@@ -128,6 +130,10 @@ __global__ void rSort(uint64 *d_in) {
     BlockStoreT(temp_storage.store).Store(d_in + block_offset, thread_keys);
 }
 
+/* Mark the Values Not Duplicate.
+ * For example, if input_d is   [0,1,1,2,2,2,3,4,5,6,6,6,...].
+ * Then dupe_d should be        [1,1,0,1,0,0,1,1,1,1,0,0,...].
+ */
 template<int BLOCK_THREADS, int ITEMS_PER_THREAD>
 __global__ void getDupe (uint64 *input_d, int *dupe_d, int numElem_list) {
     int tx = threadIdx.x;
@@ -142,6 +148,11 @@ __global__ void getDupe (uint64 *input_d, int *dupe_d, int numElem_list) {
     }
 }
 
+/* Scan
+ * For example, if dupe_d is    [1,1,0,1,0,0,1,1,1,1,0,0,...].
+ * Then scan_d should be        [0,1,2,2,3,3,3,4,5,6,7,7,...].
+ * Its duty is to find the offset of values in output.
+ */
 template<int BLOCK_THREADS, int ITEMS_PER_THREAD>
 __global__ void getScan (int *scan_d, int *dupe_d, int numElem_list) {
     typedef cub::BlockLoad<
@@ -163,6 +174,7 @@ __global__ void getScan (int *scan_d, int *dupe_d, int numElem_list) {
     BlockStoreT(temp_storage.store).Store(scan_d + block_offset, thread_data);
 }
 
+
 template<int BLOCK_THREADS, int ITEMS_PER_THREAD>
 __global__ void getSketch (const int m, uint64 *input_d, int *scan_d, int *dupe_d,
                            uint64 *sketch_d, int numElem_list) {
@@ -177,6 +189,9 @@ __global__ void getSketch (const int m, uint64 *input_d, int *scan_d, int *dupe_
     }
 }
 
+/* Merge.
+ * Not Parallel Version Currently.
+ */
 void rMerge(const int m, uint64 *sketch_h, uint64 *output_h) {
     int pointer1 = 0, pointer2 = 0, count = 0;
     uint64 bucket[m];
@@ -218,7 +233,8 @@ signature genSig(const int k, const int m, const int t, char *dnaList, int lengt
     record[CHUNKS_NUM - 1] = length - (BLOCKS_NUM * BLOCK_THREADS * ITEMS_PER_THREAD) * (CHUNKS_NUM - 1);
     start[0] = 0;
     end[0] = record[0] - 1;
-    start[1] = record[0] - k + 1;
+    if (CHUNKS_NUM >= 1)
+        start[1] = record[0] - k + 1;
     for (int i = 1; i < CHUNKS_NUM - 1; i++) {
         end[i] = start[i] + record[i] - 1;
         start[i + 1] = end[i] + 1 - k + 1;
@@ -295,8 +311,26 @@ signature genSig(const int k, const int m, const int t, char *dnaList, int lengt
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
- * The following is old program accept uint64* input.
+ * The following is old program accepting uint64* input.
  * */
 #define BLOCKS_NUM 5
 __global__
