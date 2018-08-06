@@ -306,6 +306,9 @@ signature genSig(const int k, const int m, const int t, char *dnaList, int lengt
     cudaFree((void *) dna_d);
     cudaFree((void *) input_d);
     cudaFree((void *) output_d);
+    cudaFree((void *) dupe_d);
+    cudaFree((void *) scan_d);
+    cudaFree((void *) sketch_d);
 
     return sig;
 }
