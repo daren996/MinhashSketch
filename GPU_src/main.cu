@@ -223,10 +223,17 @@ int main(int argc, char *argv[]) {
     }
     file1.close();
     file2.close();
+    cout << "sequence1.size()" << sequence1.size() << endl;
+    cout << "sequence2.size()" << sequence2.size() << endl;
     char dnaList1[sequence1.size()];
-    strcpy(dnaList1, sequence1.c_str());
     char dnaList2[sequence2.size()];
-    strcpy(dnaList2, sequence2.c_str());
+//    for (int i = 0; i < sequence1.size(); i++)
+//        dnaList1[i] = sequence1[i];
+//    for (int i = 0; i < sequence2.size(); i++)
+//        dnaList2[i] = sequence2[i];
+    strcpy(dnaList1, sequence1.c_str());
+    strcpy(dnaList2, sequence1.c_str());
+    cout << "Get DNA sequence successfully." << endl;
 
     // MAIN PROGRESS
     clock_t ini_time;
