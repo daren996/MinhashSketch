@@ -113,7 +113,7 @@ __device__ void BlockRemoveDupe (const int m, int *thread_dataS, int *thread_dat
 }
 
 /*
- * Get sketch back to input_d
+ * Get sketch of each block back to input_d
 */
 template<int BLOCK_THREADS, int ITEMS_PER_THREAD>
 __device__ void BlockGetBack (const int m, uint64 *thread_dataR, int *thread_dataI, uint64 *sketch) {
@@ -151,11 +151,11 @@ __global__ void getBlockSketch (const int k, const int m, char *dna_d, uint64 *i
         typename BlockDiscontinuity::TempStorage dupe;
         typename BlockScan::TempStorage scan;
     } temp_storage;
-    __shared__ uint64 sketch[BLOCK_THREADS * ITEMS_PER_THREAD];
     uint64 thread_dataR[ITEMS_PER_THREAD];
     int thread_dataD[ITEMS_PER_THREAD];
     int thread_dataS[ITEMS_PER_THREAD];
     int thread_dataI[ITEMS_PER_THREAD];
+    __shared__ uint64 sketch[BLOCK_THREADS * ITEMS_PER_THREAD];
 
     int block_offset = blockIdx.x * (BLOCK_THREADS * ITEMS_PER_THREAD);
     int thread_offset = (BLOCK_THREADS * blockIdx.x + threadIdx.x) * ITEMS_PER_THREAD;
@@ -179,6 +179,128 @@ __global__ void getBlockSketch (const int k, const int m, char *dna_d, uint64 *i
     BlockGetBack<BLOCK_THREADS, ITEMS_PER_THREAD>(m, thread_dataR, thread_dataI, sketch);
     __syncthreads();
     BlockStoreR(temp_storage.store).Store(input_d + block_offset, thread_dataR);
+}
+
+
+/*
+ * Merge between blocks. (Binary-merge)
+ * rank_d should be {1, 2, 3, 4, ...} at the beginning.
+ * Calculate offsets of each value and store them to rank_d.
+ * Then write back to input_d.
+ * */
+template<int BLOCKS_NUM, int BLOCK_THREADS, int ITEMS_PER_THREAD>
+__global__ void getWrapSketch (const int m, uint64 *input_d,
+                               int *rank_d, uint64 *dupe_d, int *count, int numElem_list) {
+
+    int blockID = blockIdx.x;
+    int threadID = threadIdx.x;
+
+    int offset = 1;
+    while (offset < BLOCKS_NUM) {
+        count[blockID] = 0;
+        if (blockID % (offset * 2) == 0 && (blockID + offset) < BLOCKS_NUM && threadID * ITEMS_PER_THREAD < m) {
+            for (int i = 0; i < ITEMS_PER_THREAD; ++i) {
+                if (threadID * ITEMS_PER_THREAD + i < m) {
+                    // find rank(Ai|B), i = blockID * BLOCK_THREADS * ITEMS_PER_THREAD + threadID * ITEMS_PER_THREAD
+                    int Ai = input_d[blockID * BLOCK_THREADS * ITEMS_PER_THREAD + threadID * ITEMS_PER_THREAD + i];
+                    int left = (blockID + offset) * BLOCK_THREADS * ITEMS_PER_THREAD + 0;
+                    int right = (blockID + offset) * BLOCK_THREADS * ITEMS_PER_THREAD + m - 1;
+                    int median = (left + right) / 2;
+                    int result;
+                    while (left <= right) { // Bisection Method
+                        if (right - left <= 1) {
+                            if (input_d[right] < Ai)
+                                result = right + 1;
+                            else if (input_d[left] > Ai)
+                                result = left;
+                            else
+                                result = right;
+                            rank_d[blockID * m + threadID * ITEMS_PER_THREAD + i] += result;
+                            break;
+                        }
+                        if (input_d[median] > Ai) {
+                            right = median;
+                            median = (left + right) / 2;
+                        } else if (input_d[median] < Ai) {
+                            left = median;
+                            median = (left + right) / 2;
+                        } else {
+                            rank_d[blockID * m + threadID * ITEMS_PER_THREAD + i] = -1;
+                            dupe_d[blockID * m + count[blockID]++] = Ai;
+                            break;
+                        }
+                    }
+                }
+            }
+            for (int d = blockID * m; d < blockID * m + count[blockID]; ++d)
+                for (int i = 0; i < ITEMS_PER_THREAD; ++i)
+                    if (threadID * ITEMS_PER_THREAD + i < m &&
+                        input_d[blockID * BLOCK_THREADS * ITEMS_PER_THREAD +
+                                threadID * ITEMS_PER_THREAD + i] > dupe_d[d])
+                        rank_d[blockID * m + threadID * ITEMS_PER_THREAD + i] -= 1;
+            for (int i = 0; i < ITEMS_PER_THREAD; ++i) {
+                if (threadID * ITEMS_PER_THREAD + i < m) {
+                    // find rank(Bi|A), i = (blockID + offset) * BLOCK_THREADS * ITEMS_PER_THREAD + threadID * ITEMS_PER_THREAD
+                    int Bi = input_d[(blockID + offset) * BLOCK_THREADS * ITEMS_PER_THREAD + threadID * ITEMS_PER_THREAD + i];
+                    int left = blockID * BLOCK_THREADS * ITEMS_PER_THREAD + 0;
+                    int right = blockID * BLOCK_THREADS * ITEMS_PER_THREAD + m - 1;
+                    int median = (left + right) / 2;
+                    int result;
+                    while (left <= right) { // Bisection Method
+                        if (right - left <= 1) {
+                            if (input_d[right] < Bi)
+                                result = right + 1;
+                            else if (input_d[left] > Bi)
+                                result = left;
+                            else
+                                result = right;
+                            rank_d[(blockID + offset) * m + threadID * ITEMS_PER_THREAD + i] += result;
+                            break;
+                        }
+                        if (input_d[median] > Bi) {
+                            right = median;
+                            median = (left + right) / 2;
+                        } else if (input_d[median] < Bi) {
+                            left = median;
+                            median = (left + right) / 2;
+                        } else {
+                            rank_d[(blockID + offset) * m + threadID * ITEMS_PER_THREAD + i] += median;
+                            break;
+                        }
+                    }
+                }
+            }
+            for (int d = blockID * m; d < blockID * m + count[blockID]; ++d)
+                for (int i = 0; i < ITEMS_PER_THREAD; ++i)
+                    if (threadID * ITEMS_PER_THREAD + i < m &&
+                        input_d[(blockID + offset) * BLOCK_THREADS * ITEMS_PER_THREAD +
+                                threadID * ITEMS_PER_THREAD + i] > dupe_d[d])
+                        rank_d[(blockID + offset) * m + threadID * ITEMS_PER_THREAD + i] -= 1;
+
+            // Write according to offset in rank_d
+            for (int i = 0; i < ITEMS_PER_THREAD; ++i) {
+                if (threadID * ITEMS_PER_THREAD + i < m &&
+                    rank_d[blockID * BLOCK_THREADS * ITEMS_PER_THREAD +
+                           threadID * ITEMS_PER_THREAD + i] != -1) {
+                    dupe_d[blockID * m +
+                           rank_d[blockID * BLOCK_THREADS * ITEMS_PER_THREAD + threadID * ITEMS_PER_THREAD + i]] =
+                                   input_d[blockID * BLOCK_THREADS * ITEMS_PER_THREAD + threadID * ITEMS_PER_THREAD + i];
+                    dupe_d[blockID * m +
+                           rank_d[(blockID + offset) * BLOCK_THREADS * ITEMS_PER_THREAD + threadID * ITEMS_PER_THREAD + i]] =
+                            input_d[(blockID + offset) * BLOCK_THREADS * ITEMS_PER_THREAD + threadID * ITEMS_PER_THREAD + i];
+                }
+            }
+
+            // Write Back
+            for (int i = 0; i < ITEMS_PER_THREAD; ++i) {
+                if (threadID * ITEMS_PER_THREAD + i < m) {
+                    input_d[blockID * BLOCK_THREADS * ITEMS_PER_THREAD + threadID * ITEMS_PER_THREAD + i] =
+                            dupe_d[blockID * m + threadID * ITEMS_PER_THREAD + i];
+                }
+            }
+        }
+        offset *= 2;
+    }
 }
 
 /* Merge.
@@ -248,6 +370,24 @@ signature genSig(const int k, const int m, const int t, char *dnaList, int lengt
         output_h[i] = UINT64_MAX;
     cout << "CHUNKS_NUM: " << CHUNKS_NUM << "  numElem_dna: " << numElem_dna << "  numElem_list: " << numElem_list << endl;
 
+    uint64 * dupe_h = (uint64 *) malloc(sizeof(uint64) * BLOCKS_NUM * m);
+    int * rank_h = (int *) malloc(sizeof(int) * BLOCKS_NUM * m);
+    int * count_h = (int *) malloc(sizeof(int) * BLOCKS_NUM);
+    for (int i = 0; i < BLOCKS_NUM; ++i) {
+        count_h[i] = 0;
+        for (int j = 0; j < m; j++)
+            rank_h[i * m + j] = j;
+    }
+    uint64 * dupe_d;
+    res = cudaMalloc(&dupe_d, sizeof(uint64) * BLOCKS_NUM * m);
+    CHECK(res);
+    int * rank_d;
+    res = cudaMalloc(&rank_d, sizeof(int) * BLOCKS_NUM * m);
+    CHECK(res);
+    int * count_d;
+    res = cudaMalloc(&count_d, sizeof(int) * BLOCKS_NUM);
+    CHECK(res);
+
     for (int j = 0; j < t; j++) {
 //        cout << "hash_index: " << j << "  hashes_b: " << hashes_b[j] << endl;
         for (int p = 0; p < CHUNKS_NUM; p++) {
@@ -263,6 +403,13 @@ signature genSig(const int k, const int m, const int t, char *dnaList, int lengt
 
             getBlockSketch <BLOCK_THREADS, ITEMS_PER_THREAD> << < BLOCKS_NUM, BLOCK_THREADS >> >
                     (k, m, dna_d, input_d, numElem_dna, numElem_list, hashes_b[j]);
+
+            res = cudaMemcpy((void *) (rank_d), (void *) (rank_h), numElem_dna * sizeof(char), cudaMemcpyHostToDevice);
+            CHECK(res);
+            res = cudaMemcpy((void *) (count_d), (void *) (count_h), numElem_dna * sizeof(char), cudaMemcpyHostToDevice);
+            CHECK(res);
+            getWrapSketch <BLOCKS_NUM, BLOCK_THREADS, ITEMS_PER_THREAD> << < BLOCKS_NUM, BLOCK_THREADS >> >
+                    (m, input_d, rank_d, dupe_d, count_d, numElem_list);
 
             res = cudaMemcpy((void *) (sketch_h), (void *) (input_d), m * sizeof(uint64), cudaMemcpyDeviceToHost);
             CHECK(res);
