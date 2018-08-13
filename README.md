@@ -114,6 +114,23 @@ In general, the process divides the long DNA into sevelral CHUNKs and cope with 
 <p>
 <img src="./git_picture/Steps1.png" width="400" align=center />
 
+### Merge Between Blocks
+
+In general, merge two ordered lists into one need O(m + n) time complexity. But we could use a efficient algorithm to merge two ordered lists with O(log(n)). 
+
+	Given two ordered Lists A and B
+	rank(x | A) : The number of elements in A that are not greater than x.
+	rank(B | A) : An array (r1,r2,..., rn), where ri = rank(B[i]:A).
+	rank(x | AUB) : The number of elements in the AUB that are not greater than x, so rank(x | AUB) = rank(X | A) + rank(x | B).
+	Further : rank(A | AUB)= rank(A | A) + rank(A | B).
+
+rank(A | AUB) is offset vector of elements in A.
+We could get rank(A | AUB) and rank(B | AUB) with time complexity O(log(n)), where n is number of elements in A (or B). 
+Then write back m smallest values according to offset.
+
+And I considered the duplicating situation, that is, there are values in the two lists are duplicates. In this case, we can give it a mark, do not write back and then reduce the offset of values which bigger than that the mark value by one.  
+
+
 
 -------------------
 It is a project when I was internship at the University of Washington in St. Louis under the guidance of [Prof. Buhler](https://www.cse.wustl.edu/~jbuhler/).
