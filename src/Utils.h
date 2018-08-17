@@ -3,12 +3,24 @@
 
 #include <fstream>
 #include <iostream>
+#include <cstdlib>
 #include <map>
 
 //typedef unsigned int uint;
 //typedef unsigned long ulong;
+#define gpuErrchk(ans) { gpuAssert((ans), __FILE__, __LINE__); }
 
 using namespace std;
+
+inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=true)
+{
+    if (code != cudaSuccess)
+    {
+        std::cerr << "GPUassert: " << cudaGetErrorString(code) << ' ' << file << ':' << line << std::endl;
+        if (abort)
+            exit(code);
+    }
+}
 
 namespace utils {
     int base2int(char base);

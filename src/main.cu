@@ -6,16 +6,91 @@
 #include <random>
 #include <vector>
 #include <string>
-#include <cstring>
 
-#include "Radix.h"
-#include "Help.h"
+#include "RadixGPU.cu"
+#include "Utils.h"
 
 using namespace std;
 
-void output_signature(vector<vector<uint64>> sig1);
+void output_signature(vector <vector<uint64>> sig1) {
+    for (int h = 0; h < sig1.size(); ++h) {
+        cout << "sig[" << h << "].size(): " << sig1[h].size() << "\t";
+        for (int i = 0; i < sig1[h].size(); ++i) {
+            cout << hex << sig1[h][i] << dec << " ";
+        }
+        cout << endl;
+    }
+}
 
-void getList(int k, uint64 *list[], string &sequence, vector<Hash> &hashes) {
+void usage() {
+    cout << "===========================" << endl;
+    cerr << "Usage: " << endl << endl;
+    cerr << "    ./MinhashSketch FILE_ONE FILE_TWO MODE" << endl;
+    cerr << endl;
+    cerr << "    Possible MODEs are:" << endl;
+    cerr << endl << bold_on;
+    cerr << "        all" << endl;
+    cerr << endl;
+    cerr << "        minhash_parallel" << endl;
+    cerr << endl;
+    cerr << "Execute \"MinhashSketch help\" for an extended help section." << endl;
+    cout << "===========================" << endl;
+    exit(1);
+}
+
+void help() {
+    cout << endl;
+    cout << bold_on << "NAME" << bold_off << endl;
+    cout << "    " << "MinhashSketch" << endl;
+    cout << endl;
+    cout << bold_on << "USAGE" << bold_off << endl;
+    cout << "    " << "MinhashSketch FILE_ONE FILE_TWO " << bold_on << "MODE [PARAMETERS...]" << bold_off << endl;
+    cout << endl;
+    cout << "    " << "MinhashSketch calculates the similarity between two text files FILE_ONE and FILE_TWO" << endl;
+    cout << "    " << "and outputs it as a number between 0 and 1, where 1 means the two files are exactly" << endl;
+    cout << "    " << "the same." << endl;
+    cout << endl;
+    cout << bold_on << "MODE" << bold_off << endl;
+    cout << "    " << "There are modes which change the way MinhashSketch computes the similarity. " << endl;
+    cout << "    " << "Each may make use of different parameters, indicated as follows:" << endl;;
+    cout << endl;
+    cout << "    " << bold_on << "all" << bold_off << endl;
+    cout << "        " << "This option executes all modes." << endl;
+    cout << endl;
+    cout << "    " << bold_on << "minhash" << bold_off << endl;
+    cout << "        " << "Calculates the similarity by computing minhash signatures for each sequence. Used" << endl;
+    cout << "        " << "parameters are." << endl;
+    cout << endl;
+    cout << "            " << "--k=POSITIVE_INTEGER as shingle size" << endl;
+    cout << endl;
+    cout << "            " << "--t=POSITIVE_INTEGER" << bold_on << " (obligatory) " << bold_off
+         << "as number of hash functions used" << endl;
+    cout << endl;
+    cout << "            " << "--seed=INTEGER as random generator seed" << endl;
+    cout << endl;
+    cout << bold_on << "PARAMETERS" << bold_off << endl;
+    cout << endl;
+    cout << "    " << bold_on << "--k=POSITIVE_INTEGER" << bold_off << endl;
+    cout << "        " << "Defaults to k=9. Indicates the size of the shingles used to calculate the simi-" << endl;
+    cout << "        " << "larity between the documents." << endl;
+    cout << endl;
+    cout << "    " << bold_on << "--m=POSITIVE_INTEGER" << bold_off << endl;
+    cout << "        " << "Defaults to m=1. Indicates the number of sketches saved in minhash modes." << endl;
+    cout << endl;
+    cout << "    " << bold_on << "--t=POSITIVE_INTEGER" << bold_off << endl;
+    cout << "        " << "Defaults to t=1. Indicates the number of hash functions used in minhash modes." << endl;
+    cout << endl;
+    cout << "    " << bold_on << "--seed=INTEGER" << bold_off << endl;
+    cout << "        " << "Defaults to a random value. Used by minhash modes in their random generator number." << endl;
+    cout << endl;
+    cout << "    " << bold_on << "-e" << bold_off << endl;
+    cout << "        " << "Output in experimentation format." << endl;
+    cout << endl;
+    exit(0);
+}
+
+/*
+void getList(int k, uint64 *list[], string &sequence, vector <Hash> &hashes) {
     for (int j = 0; j < hashes.size(); j++) {
         uint64 begin = 0, end = sequence.size() - k + 1;
         uint64 length = end - begin + 1;
@@ -36,7 +111,7 @@ void getList(int k, uint64 *list[], string &sequence, vector<Hash> &hashes) {
                     cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
                          << sequence[s_index + begin] << endl;
             }
-            list[j][l_index++] = hashes[j](cur_seq, (k / 32 + 1) * 8);
+            list[j][l_index++] = hashes[j](cur_seq);
             for (; s_index < length; ++s_index) {
                 if (utils::base2int(sequence[s_index + begin]) != -1)
                     cur_seq[0] =
@@ -44,7 +119,7 @@ void getList(int k, uint64 *list[], string &sequence, vector<Hash> &hashes) {
                 else
                     cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
                          << sequence[s_index + begin] << endl;
-                list[j][l_index++] = hashes[j](cur_seq, (k / 32 + 1) * 8);
+                list[j][l_index++] = hashes[j](cur_seq);
             }
         } else {
             for (; s_index < k; ++s_index) {
@@ -55,7 +130,7 @@ void getList(int k, uint64 *list[], string &sequence, vector<Hash> &hashes) {
                     cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
                          << sequence[s_index + begin] << endl;
             }
-            list[j][l_index++] = hashes[j](cur_seq, (k / 32 + 1) * 8);
+            list[j][l_index++] = hashes[j](cur_seq);
             for (; s_index < length; ++s_index) {
                 for (int i = 0; i < k / 32 - 1; ++i) {
                     cur_seq[i] = (cur_seq[i] << 2) + (cur_seq[i + 1] >> 62);
@@ -67,11 +142,12 @@ void getList(int k, uint64 *list[], string &sequence, vector<Hash> &hashes) {
                 else
                     cerr << "ERROR:" << endl << "\t index: " << s_index + begin << endl << "\t base: "
                          << sequence[s_index + begin] << endl;
-                list[j][l_index] = hashes[j](cur_seq, (k / 32 + 1) * 8);
+                list[j][l_index] = hashes[j](cur_seq);
             }
         }
     }
 }
+*/
 
 // MinhashSketch.exe ../testing_files/sequence_clip1.fasta ../testing_files/sequence_clip2.fasta all -e --k=5 --m=10 --t=10
 int main(int argc, char *argv[]) {
@@ -140,23 +216,34 @@ int main(int argc, char *argv[]) {
     string file_info1, file_info2, sequence1, sequence2, s1, s2;
     utils::file_to_string(file1, file_info1, sequence1); // The first line is file information
     utils::file_to_string(file2, file_info2, sequence2);
+    uint64 sequence_size1 = sequence1.size(), sequence_size2 = sequence2.size();
     if (sequence1.size() < k || sequence2.size() < k) {
         cout << "k cannot be greater than the size of any document" << endl;
         exit(1);
     }
     file1.close();
     file2.close();
-//    char dnaList1[sequence1.size()];
-//    strcpy(dnaList1, sequence1.c_str());
-//    char dnaList2[sequence2.size()];
-//    strcpy(dnaList2, sequence2.c_str());
+    cout << "sequence1.size()" << sequence1.size() << endl;
+    cout << "sequence2.size()" << sequence2.size() << endl;
+    char dnaList1[sequence1.size()];
+    char dnaList2[sequence2.size()];
+//    for (int i = 0; i < sequence1.size(); i++)
+//        dnaList1[i] = sequence1[i];
+//    for (int i = 0; i < sequence2.size(); i++)
+//        dnaList2[i] = sequence2[i];
+    strcpy(dnaList1, sequence1.c_str());
+    strcpy(dnaList2, sequence1.c_str());
 
     // MAIN PROGRESS
     clock_t ini_time;
     bool mode_found = false;
     double similarity, time;
-    list<tuple<string, double, double>> results;
-    vector<Hash> hashes = generateHashes(t, seed);
+    list <tuple<string, double, double>> results;
+//    vector <Hash> hashes = generateHashes(t, seed);
+    uint64 *hashes_b = generateHashes_b(t, seed);
+//    for (int i = 0; i < t; i++) {
+//        cout << "hashes_b[i]: " << hashes_b[i] << endl;
+//    }
 
     // GET HASH VALUES LIST
     /*uint64 *list1[t];
@@ -174,25 +261,6 @@ int main(int argc, char *argv[]) {
     getList(k, list1, sequence1, hashes);
     getList(k, list2, sequence2, hashes);*/
 
-    if (cal_name == "all" || cal_name == "minhash_regular") {
-        if (t < 1) {
-            cerr << endl;
-            cerr << "You must provide a parameter --t=POSITIVE_INTEGER parameter for minhash modes!" << endl << endl;
-            exit(1);
-        }
-        mode_found = true;
-        ini_time = clock();
-        vector<vector<uint64>> sig1 = rs::genSig_single(k, m, sequence1, hashes);
-        vector<vector<uint64>> sig2 = rs::genSig_single(k, m, sequence2, hashes);
-        cout << "sig1" << endl;
-        output_signature(sig1);
-        cout << "\nsig2" << endl;
-        output_signature(sig2);
-        cout << endl;
-        similarity = computeSim(sig1, sig2);
-        time = double(clock() - ini_time) / CLOCKS_PER_SEC;
-        results.emplace_back("minhash_regular", similarity, time);
-    }
     if (cal_name == "all" || cal_name == "minhash_parallel") {
         if (t < 1) {
             cerr << endl;
@@ -202,8 +270,8 @@ int main(int argc, char *argv[]) {
         mode_found = true;
         ini_time = clock();
         // vector<Hash> hashes = generateHashes(t, seed);
-        vector<vector<uint64>> sig1 = rs::genSig_multi(k, m, sequence1, hashes);
-        vector<vector<uint64>> sig2 = rs::genSig_multi(k, m, sequence2, hashes);
+        vector <vector<uint64>> sig1 = genSig(k, m, t, dnaList1, sequence1.size(), hashes_b);
+        vector <vector<uint64>> sig2 = genSig(k, m, t, dnaList2, sequence2.size(), hashes_b);
         cout << "sig1:  size:" << sig1[0].size() << endl;
         output_signature(sig1);
         cout << "\nsig2:  size:" << sig2[0].size() << endl;
@@ -237,14 +305,4 @@ int main(int argc, char *argv[]) {
         }
     }
 
-}
-
-void output_signature(vector<vector<uint64>> sig1) {
-    for (int h = 0; h < sig1.size(); ++h) {
-        cout << "sig[" << h << "].size(): " << sig1[h].size() << "\t";
-        for (int i = 0; i < sig1[h].size(); ++i) {
-            cout << hex << sig1[h][i] << dec << " ";
-        }
-        cout << endl;
-    }
 }

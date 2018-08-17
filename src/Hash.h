@@ -20,18 +20,13 @@ using namespace std;
 typedef vector<vector<uint64>> signature;
 
 class Hash {
-private:
+public:
     uint64 a;
     uint64 b;
     uint64 p;
-
     bool is_prime(long long int x);
-
     long long int generateNextPrime(long long int n);
-
-public:
     Hash() = default;
-
     Hash(uint64 u, int seed) {
 //        p = generateNextPrime(static_cast<long long int>(u));
         p = (uint64)13835058055282163729;
@@ -41,16 +36,12 @@ public:
         a = distA(rng);
         b = distB(rng);
     }
-
     uint64 operator()(uint64 x) const;
-
-    uint64 operator()(uint64 *x, int k) const;
 };
 
 vector<Hash> generateHashes(int t, int seed);
-
+uint64* generateHashes_b(int t, int seed);
 int computeSim(vector<uint64> v1, vector<uint64> v2);
-
 double computeSim(const signature &sig1, const signature &sig2);
 
 #endif //MINHASHSKETCH_MINHASH_H
