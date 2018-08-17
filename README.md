@@ -4,16 +4,16 @@ It is a project when I was internship at the University of Washington in St. Lou
 
 ## What is MinhashSketch
 
-It provides a complete program which implements a parallel algorithm to get  minhash sketch with DNA sequence as input under [CUDA](http://supercomputingblog.com/cuda-tutorials/) and [CUB](https://nvlabs.github.io/cub/).  
+It's a program which implements a parallel algorithm to get  minhash sketches with DNA sequence as input under [CUDA](http://supercomputingblog.com/cuda-tutorials/) and [CUB](https://nvlabs.github.io/cub/).  
 
-[Minhash](https://en.wikipedia.org/wiki/MinHash) is a technique for quickly estimating how similar two sets are. For More information of similarity and minhash sketch, you can see [Class Note 24](https://classes.engineering.wustl.edu/cse584a/notes/class24.pdf) and [Class Note 25](https://classes.engineering.wustl.edu/cse584a/notes/class25.pdf)
+[Minhash](https://en.wikipedia.org/wiki/MinHash) is a technique for quickly estimating how similar two sets are. For More information of similarity and minhash sketch, you can see [Class Note 24](https://classes.engineering.wustl.edu/cse584a/notes/class24.pdf) and [Class Note 25](https://classes.engineering.wustl.edu/cse584a/notes/class25.pdf) of Prof. Buhler.
 
 ### Steps
 
-In general, the process divides the long DNA into sevelral CHUNKs and cope with them sequentially. For each CHUNK, it will get hash velues, radix sort, mark, scan and merge in GPU. 
+In general, the program divides the long DNA sequence into sevelral CHUNKs and cope with them respectively. For each CHUNK, it will get hash velues, radix sort, mark, scan and merge in GPU. 
 
 <p>
-<img src="./git_picture/Steps1.png" width="400" align=center />
+<img src="./git_picture/Steps1.png" width="360" align=center />
 
 ### Input
 
@@ -29,9 +29,29 @@ The output should be the minhash sketch of input DNA sequences and the similarit
 <pr>
 <img src="./git_picture/running_example1.png" width="1000" align=center />
 
+### File structure
+
+	MinhashSketch
+	|
+	|-- src
+	|   |-- main.cu		  # Main function and help, usage functions
+	|   |-- MinhashSketch.cu   # Key file for generating minhash sketches
+	|   |-- Utils.cu   	  # Some utilities
+	|   |-- Utils.h       
+	|   |-- Hash.cu   	  # Generate hash funtions or random parameters
+	|   |-- Hash.h    	  
+	|   |-- SpookyV2.cu   # SpookyHash function for host
+	|   |-- SpookyV2.h
+	|   |-- SpookyV2_d.cu # SpookyHash function for device
+	|   |-- SpookyV2_d.h
+	|   
+	|-- testing_files     # Save files of DNA sequences
+
+The first line of DNA files should be the file information, followed by the DNA sequence from the second line.
+
 ## How do MinhashSketch work
 
-### Subsequence
+### Get Subsequence
 
 We use a pointer to access sequence, which need noly to record the last base read, and directly assign four bases(A, C, T, G) to four kinds of 2-bit values in binary. 
 If the length of the subsequence exceeds 32 (i.e. one uint64 is not enough to indicate the length of subsequences), we need to use more than one ([k / 32] + 1) uint64 to store subsequences.

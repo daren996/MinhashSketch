@@ -8,11 +8,12 @@
 #include <thread>
 #include <unordered_set>
 #include <cuda_runtime.h>
-#include "Hash.h"
 #include "SpookyV2_d.h"
 #include <cub/cub.cuh>
 
 using namespace std;
+
+typedef vector<vector<uint64>> signature;
 
 //#define BLOCKS_NUM 5
 //#define BLOCK_THREADS 128

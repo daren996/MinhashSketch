@@ -7,7 +7,8 @@
 #include <vector>
 #include <string>
 
-#include "RadixGPU.cu"
+#include "MinhashSketch.cu"
+#include "Hash.h"
 #include "Utils.h"
 
 using namespace std;
