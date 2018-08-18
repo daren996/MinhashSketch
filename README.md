@@ -2,12 +2,11 @@
 
 It is a project when I was internship at the University of Washington in St. Louis under the guidance of [Prof. Buhler](https://www.cse.wustl.edu/~jbuhler/).
 
-[1. What is MinhashSketch](#jump1)<p>
+[1. What is MinhashSketch](#what-is-minhashsketch)<p>
 [2. Function Documentation](#jump2)<p>
 [3. Examples](#jump3)<p>
 [4. Process Description](#jump4)
 
-<span id="jump1"></span>
 ## What is MinhashSketch
 
 It's a program which implements a parallel algorithm to get  minhash sketches with DNA sequence as input under [CUDA](http://supercomputingblog.com/cuda-tutorials/) and [CUB](https://nvlabs.github.io/cub/).  
