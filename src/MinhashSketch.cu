@@ -234,11 +234,12 @@ __global__ void getAllSketch (const int m, uint64 *input_d, int numElem_list) {
 
     int offset = 1;
     while (offset < BLOCKS_NUM) {
-        if (blockID % (offset * 2) == 0 && blockID + offset < BLOCKS_NUM || blockID % (offset * 2) != 0) {
+        if ( (blockID % (offset * 2) == 0 && blockID + offset < BLOCKS_NUM) ||
+             (blockID % offset == 0 && blockID % (offset * 2) != 0) ) {
             BlockLoad64(temp_storage.load64).Load(input_d + blockID * BLOCK_THREADS * ITEMS_PER_THREAD, thread_data64);
             __syncthreads();
             int start_A, start_B;
-            if (blockID % (offset * 2) == 0 && blockID + offset < BLOCKS_NUM) {
+            if (blockID % (offset * 2) == 0) {
                 start_A = blockID;
                 start_B = blockID + offset;
             }
@@ -263,13 +264,14 @@ __global__ void getAllSketch (const int m, uint64 *input_d, int numElem_list) {
             for (int i = 0; i < ITEMS_PER_THREAD; ++i)
                 thread_dataR[i] -= thread_dataS[i];
             __syncthreads();
-            if (blockID % (offset * 2) == 0 && blockID + offset < BLOCKS_NUM)
+            if (blockID % (offset * 2) == 0)
                 for (int i = 0; i < ITEMS_PER_THREAD; ++i)
                     if (thread_dataD[i] != 1 && thread_dataR[i] < m)
                         input_d[start_A * BLOCK_THREADS * ITEMS_PER_THREAD + thread_dataR[i]] = thread_data64[i];
             if (blockID % (offset * 2) != 0)
                 for (int i = 0; i < ITEMS_PER_THREAD; ++i)
-                    input_d[start_B * BLOCK_THREADS * ITEMS_PER_THREAD + thread_dataR[i]] = thread_data64[i];
+                    if (thread_dataR[i] < m)
+                        input_d[start_B * BLOCK_THREADS * ITEMS_PER_THREAD + thread_dataR[i]] = thread_data64[i];
             __syncthreads();
         }
         offset *= 2;
@@ -281,7 +283,7 @@ __global__ void getAllSketch (const int m, uint64 *input_d, int numElem_list) {
  */
 void rMerge(const int m, uint64 *sketch_h, uint64 *output_h) {
     int pointer1 = 0, pointer2 = 0, count = 0;
-    uint64 bucket[m];
+    uint64 * bucket = new uint64[m];
     while (count < m) {
         if (sketch_h[pointer1] < output_h[pointer2]) {
             bucket[count++] = sketch_h[pointer1++];
@@ -294,11 +296,12 @@ void rMerge(const int m, uint64 *sketch_h, uint64 *output_h) {
     }
     for (uint64 i = 0; i < m; i++)
         output_h[i] = bucket[i];
+    delete [] bucket;
 }
 
 signature genSig(const int k, const int m, const int t, char *dnaList, int length, uint64 *hashes_b) {
 
-    const int BLOCKS_NUM = 2;
+    const int BLOCKS_NUM = 16;
     const int BLOCK_THREADS = 32 * 16;
     const int ITEMS_PER_THREAD = 4;
 
