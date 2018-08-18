@@ -5,7 +5,8 @@ It is a project when I was internship at the University of Washington in St. Lou
 [1. What is MinhashSketch](#what-is-minhashsketch)<p>
 [2. Function Documentation](#function-documentation)<p>
 [3. Examples](#examples)<p>
-[4. Process Description](#process-description)
+[4. Process Description](#process-description)<p>
+[5. Reference](#reference)
 
 ## What is MinhashSketch
 
@@ -95,7 +96,7 @@ The **hash\_b** is a random number between 0 and UINT64\_MAX.
 
 In this function, we first get hash value list using **BlockGetHashValues**, which is descripted detailedly later. 
 
-Then, we use primitives of [CUB](https://nvlabs.github.io/cub/index.html) to **radix-sort** hash value list, **mark discontinuity**, **scan mark list** for the sake of removing duplicated items.  And then, we **write back** and **restore** sorted list into **input\_d**.
+Then, we use primitives of [CUB](https://nvlabs.github.io/cub/index.html) to **radix-sort** hash value list, **mark discontinuity**, **scan mark list** for the sake of removing duplicated items.  And then, we **write back** and **restore** sorted list into **input\_d**. For specific radix sort process, refer  [Harada et.](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.404.8825&rep=rep1&type=pdf).
 
 ### BlockGetHashValues
 
@@ -124,7 +125,7 @@ And **numElem\_list** is the length of it.
 
 We first merge the sketches in adjacent blocks, getting half of the previous sketches, then merge the adjacent sketches again, and so on untill one left.
 
-When merging sketches in every two blocks, I provide a method based on [Richard Cole, <i>Parallel Merge Sort</i>, 1986](http://www.inf.fu-berlin.de/lehre/SS10/SP-Par/download/parmerge1.pdf) in order to merge two ordered lists as quickly as possible. The previous algorithm did not solve the problem of duplicate elements in the two lists.
+When merging sketches in every two blocks, I provide a method based on [Cole](http://www.inf.fu-berlin.de/lehre/SS10/SP-Par/download/parmerge1.pdf) in order to merge two ordered lists as quickly as possible. The previous algorithm did not solve the problem of duplicate elements in the two lists.
 
 	Input: listA, listB
 	definition:
@@ -208,7 +209,12 @@ Then write back m smallest values according to offset.
 
 And I considered the duplicating situation, that is, there are values in the two lists are duplicates. In this case, we can give it a mark, do not write back and then reduce the offset of values which bigger than that the mark value by one.  
 
+## Reference
 
+1. [CUDA](https://developer.nvidia.com/cuda-zone) Nvidia CUDA Home Page.
+2. [CUB](https://nvlabs.github.io/cub/) CUB Documentation. 
+3. [Harada et.](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.404.8825&rep=rep1&type=pdf) Harada, Takahiro, and Lee Howes. "Introduction to GPU radix sort." Heterogeneous Computing with OpenCL. Morgan Kaufman (2011).
+4. [Cole](http://www.inf.fu-berlin.de/lehre/SS10/SP-Par/download/parmerge1.pdf) Cole, Richard. "Parallel merge sort." SIAM Journal on Computing 17.4 (1988): 770-785.
 
 -------------------
 It is a project when I was internship at the University of Washington in St. Louis under the guidance of [Prof. Buhler](https://www.cse.wustl.edu/~jbuhler/).
