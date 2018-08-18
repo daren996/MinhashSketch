@@ -2,8 +2,12 @@
 
 It is a project when I was internship at the University of Washington in St. Louis under the guidance of [Prof. Buhler](https://www.cse.wustl.edu/~jbuhler/).
 
-[What is MinhashSketch](#What_is_MinhashSketch)
+[1. What is MinhashSketch](#jump1)<p>
+[2. Function Documentation](#jump2)<p>
+[3. Examples](#jump3)<p>
+[4. Process Description](#jump4)
 
+<span id="jump1"></span>
 ## What is MinhashSketch
 
 It's a program which implements a parallel algorithm to get  minhash sketches with DNA sequence as input under [CUDA](http://supercomputingblog.com/cuda-tutorials/) and [CUB](https://nvlabs.github.io/cub/).  
@@ -51,6 +55,7 @@ The output should be the minhash sketch of input DNA sequences and the similarit
 
 The first line of DNA files should be the file information, followed by the DNA sequence from the second line.
 
+<span id="jump2"></span>
 ## Function Documentation
 
 The key functions are all in **MinhashSketch.cu**. 
@@ -152,7 +157,8 @@ When merging sketches in every two blocks, I provide a method based on [Richard 
 
 In this way, we can use at least (2 * m) thread to solve the two-list-merge problem in O(log(m)) time. 
 
-## Example
+<span id="jump3"></span>
+## Examples
 
 If you want to compile the program, follow the instructions below:
 
@@ -176,6 +182,7 @@ Or if you want to use **MinhashSketch.cu**, this an example about how to use it:
     vector <vector<uint64>> sig2 = genSig(k, m, t, dnaList2, length2, hashes_b);
 	similarity = computeSim(sig1, sig2);
 
+<span id="jump4"></span>
 ## Process Description
 
 ### Divide DNA sequence into several chunks
